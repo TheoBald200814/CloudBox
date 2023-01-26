@@ -1,2 +1,12 @@
 server:
   port: 8081
+spring:
+  datasource:
+    name: cloud_box  #数据库名
+    url: jdbc:mysql://rm-bp12o076k95u118i2oo.mysql.rds.aliyuncs.com:3306/cloud_box #url
+    username: cloud_box_account #用户名
+    password: Cloud_box_account #密码
+    driver-class-name: com.mysql.cj.jdbc.Driver  #数据库链接驱动
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.java # 扫描注解映射类
+  type-aliases-package: cloudbox.account.Bean # 扫描实体类
