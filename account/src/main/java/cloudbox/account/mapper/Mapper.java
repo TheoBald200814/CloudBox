@@ -1,4 +1,4 @@
-package cloudbox.account.mapper;
+package cloudbox.account.Mapper;
 
 import cloudbox.account.Bean.Account;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

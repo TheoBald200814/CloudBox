@@ -1,4 +1,4 @@
-//package cloudbox.account.mapper;
+//package cloudbox.account.Mapper;
 /**
  * 该类继承自Mybatis-plus中的BaseTypeHandler类，
  * 用于处理数据库和java中的数据类型映射关系，以下以Blob为例。
@@ -29,4 +29,3 @@
 //        return cs.getBlob(columnIndex);
 //    }
 //}
-
