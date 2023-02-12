@@ -1,33 +1,28 @@
 package cloudbox.account.Service.ServiceImpl;
 
 import cloudbox.account.Bean.Account;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
-
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+
 /**
- * Redis缓存管理类
+ * Redis账户库操作
  * @author TheoBald
  * @version 0.0.1
  */
-@Validated
-@Service
-public class RedisManagement {
+@Component
+public class AccountRedisUtil {
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-    //Redis操作
+    @Resource(name = "AccountRedisTemplate")
+    RedisTemplate<String, Object> redisTemplate;
 
 
     /**
@@ -35,7 +30,7 @@ public class RedisManagement {
      * @param account 账户对象
      * @return 若更新成功，返回true；若更新失败，返回false
      */
-    boolean putAccount(Account account) throws SQLException, IOException {
+    boolean set(Account account) throws SQLException, IOException {
 
         Map<String,String> redisAccount = new HashMap<>();
         //初始化HashMap
@@ -58,15 +53,14 @@ public class RedisManagement {
         //集合插入有效位
         redisAccount.put("account_empty",String.valueOf(account.getAccountEmpty()));
         //集合插入账户云盘容量
-        stringRedisTemplate.opsForHash().putAll(account.getId(),redisAccount);
-        stringRedisTemplate.opsForHash().getOperations().expire(account.getId(),60,TimeUnit.SECONDS);
+        redisTemplate.opsForHash().putAll(account.getId(),redisAccount);
+        redisTemplate.opsForHash().getOperations().expire(account.getId(),60, TimeUnit.SECONDS);
         //录入缓存（key：accountId，value：HashMap）
 
-
-        if(stringRedisTemplate.opsForHash().get(account.getId(),"passwordByMD5") != null){
+        if(redisTemplate.opsForHash().hasKey(account.getId(),"passwordByMD5")){
 
             return true;
-        }else{
+        }else {
 
             return false;
         }
@@ -78,9 +72,9 @@ public class RedisManagement {
      * @param accountId 账户Id
      * @return 若缓存命中，则返回该账户对象；若缓存未命中，则返回null
      */
-    Account getAccount(String accountId){
+    Account get(String accountId){
 
-        Object account= stringRedisTemplate.opsForHash().entries(accountId);
+        Object account= redisTemplate.opsForHash().entries(accountId);
         //缓存查找
         LinkedHashMap<String,String> temp=(LinkedHashMap<String, String>) account;
         //类型转换
@@ -89,7 +83,7 @@ public class RedisManagement {
             return null;
         }else{
 
-            stringRedisTemplate.opsForHash().getOperations().expire(accountId,60,TimeUnit.SECONDS);
+            redisTemplate.opsForHash().getOperations().expire(accountId,60,TimeUnit.SECONDS);
             //刷新该账户在缓存中的有效期
             Account result = new Account();
             //初始化账户对象
@@ -118,37 +112,11 @@ public class RedisManagement {
      * @param hashKey 账户属性（Redis中作为HashKey）
      * @param hashValue 账户属性值（Redis中作为HashValue）
      */
-    void updateAccount(String accountId,String hashKey,String hashValue){
+    void update(String accountId,String hashKey,String hashValue){
 
-        stringRedisTemplate.opsForHash().put(accountId,hashKey,hashValue);
+        redisTemplate.opsForHash().put(accountId,hashKey,hashValue);
 
-        stringRedisTemplate.opsForHash().getOperations().expire(accountId,60,TimeUnit.SECONDS);
+        redisTemplate.opsForHash().getOperations().expire(accountId,60,TimeUnit.SECONDS);
     }
-
-
-
-
-
-
-
-    String getToken(String token){
-
-
-
-
-
-        return null;
-
-    }
-
-
-
-
-
-
-
-
-
-
 
 }

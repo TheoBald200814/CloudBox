@@ -28,10 +28,7 @@ public class AccountManagementImpl implements AccountManagement {
     private Mapper.AccountMapper accountMapper;
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-
-    @Autowired
-    private RedisManagement redisManagement;
+    private AccountRedisUtil accountRedisUtil;
 
 
     /**
@@ -87,7 +84,7 @@ public class AccountManagementImpl implements AccountManagement {
 
             if(chargeSQL == 1){
                 //如果SQL执行成功
-                boolean chargeRedis = redisManagement.putAccount(account);
+                boolean chargeRedis = accountRedisUtil.set(account);
                 //录入Redis
                 if(chargeRedis){
 
@@ -326,7 +323,7 @@ public class AccountManagementImpl implements AccountManagement {
      */
     private Account readAccount(String accountId) throws IOException, SQLException {
 
-        Account account = redisManagement.getAccount(accountId);
+        Account account = accountRedisUtil.get(accountId);
 
         if(account != null){
             //若Redis命中
@@ -343,7 +340,7 @@ public class AccountManagementImpl implements AccountManagement {
                 //若MySQL命中
                 System.out.println("read-MySQL命中");
 
-                redisManagement.putAccount(account);
+                accountRedisUtil.set(account);
                 //录入Redis
                 return account;
             }else {
@@ -368,9 +365,9 @@ public class AccountManagementImpl implements AccountManagement {
 
         String passwordByDM5=encryptPasswordByDM5(newPassword);
         //原始密码加密
-        if(redisManagement.getAccount(accountId) != null){
+        if(accountRedisUtil.get(accountId) != null){
             //若该账户目前在Redis缓存中
-            redisManagement.updateAccount(accountId,"passwordByMD5",passwordByDM5);
+            accountRedisUtil.update(accountId,"passwordByMD5",passwordByDM5);
             //更新Redis缓存
         }
         UpdateWrapper<Account> updateWrapper=new UpdateWrapper<Account>();
@@ -398,9 +395,9 @@ public class AccountManagementImpl implements AccountManagement {
     @Override
     public boolean updateAccountNickname(@NotBlank @Size(min = 10, max = 30) @Email String accountId, @NotBlank @Size(min = 1, max = 10) String newNickname) {
 
-        if(redisManagement.getAccount(accountId) != null){
+        if(accountRedisUtil.get(accountId) != null){
             //若该账户目前在Redis缓存中
-            redisManagement.updateAccount(accountId,"nickname",newNickname);
+            accountRedisUtil.update(accountId,"nickname",newNickname);
             //更新Redis缓存
         }
 
@@ -429,9 +426,9 @@ public class AccountManagementImpl implements AccountManagement {
     @Override
     public boolean updateAccountPhoto(@NotBlank @Size(min = 10, max = 30) @Email String accountId, Blob newPhoto) throws SQLException, IOException {
 
-        if(redisManagement.getAccount(accountId) != null){
+        if(accountRedisUtil.get(accountId) != null){
             //若该账户目前在Redis缓存中
-            redisManagement.updateAccount(accountId,"photo",new String(newPhoto.getBinaryStream().readAllBytes()));
+            accountRedisUtil.update(accountId,"photo",new String(newPhoto.getBinaryStream().readAllBytes()));
             //更新Redis缓存
         }
 
@@ -460,9 +457,9 @@ public class AccountManagementImpl implements AccountManagement {
     @Override
     public boolean updateAccountAuthority(@NotBlank @Size(min = 10, max = 30) @Email String accountId, @NotNull @Min(0) @Max(2) byte newAuthority) {
 
-        if(redisManagement.getAccount(accountId) != null){
+        if(accountRedisUtil.get(accountId) != null){
             //若该账户目前在Redis缓存中
-            redisManagement.updateAccount(accountId,"authority",String.valueOf(newAuthority));
+            accountRedisUtil.update(accountId,"authority",String.valueOf(newAuthority));
             //更新Redis缓存
         }
 
@@ -491,9 +488,9 @@ public class AccountManagementImpl implements AccountManagement {
     @Override
     public boolean updateAccountDeleted(@NotBlank @Size(min = 10, max = 30) @Email String accountId, @NotNull @Min(0) @Max(1) byte newDeleted) {
 
-        if(redisManagement.getAccount(accountId) != null){
+        if(accountRedisUtil.get(accountId) != null){
             //若该账户目前在Redis缓存中
-            redisManagement.updateAccount(accountId,"deleted",String.valueOf(newDeleted));
+            accountRedisUtil.update(accountId,"deleted",String.valueOf(newDeleted));
             //更新Redis缓存
         }
 
@@ -522,9 +519,9 @@ public class AccountManagementImpl implements AccountManagement {
     @Override
     public boolean updateAccountEmpty(@NotBlank @Size(min = 10, max = 30) @Email String accountId, @NotNull @Min(0) @Max(1000000) int newAccountEmpty) {
 
-        if(redisManagement.getAccount(accountId) != null){
+        if(accountRedisUtil.get(accountId) != null){
             //若该账户目前在Redis缓存中
-            redisManagement.updateAccount(accountId,"account_empty",String.valueOf(newAccountEmpty));
+            accountRedisUtil.update(accountId,"account_empty",String.valueOf(newAccountEmpty));
             //更新Redis缓存
         }
 
