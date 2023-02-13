@@ -126,29 +126,4 @@ public class RedisManagement {
     }
 
 
-
-
-
-
-
-    String getToken(String token){
-
-
-
-
-
-        return null;
-
-    }
-
-
-
-
-
-
-
-
-
-
-
 }

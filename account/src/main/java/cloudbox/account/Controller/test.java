@@ -21,8 +21,6 @@ public class test {
 
 
 
-
-
     @RequestMapping(value = "test")
     String test() throws IOException, SQLException {
 

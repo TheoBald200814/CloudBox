@@ -1,0 +1,322 @@
+
+前后端数据交互协议————账户区
+
+数据汇总
+
+    id:Id（10-30位Email格式字符串）
+    password:密码（10-30位字符串）
+    nickname:昵称（1-10位字符串）
+    photo:头像（Blob，待定）
+    authority:权限（00/01/10）
+    empty:容量（默认100000）
+    deleted:有效位（默认1）
+=======================================================
+基础用户(*为非空,#为数据)
+-------------------------------------------------------
+    创建账户
+        Request:
+            http://ip:8080/createAccount
+            data:
+            [
+                {
+                    "*id":"##",
+                    "*password":"##",
+                    " nickname":"##",
+                    " photo":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+-------------------------------------------------------
+    登陆账户
+        Request:
+            http://ip:8080/loginBasicAccount
+            data:
+            [
+                {
+                    "*id":"##",
+                    "*password":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure",
+                    "*token":"##",
+                    "*nickname":"##",
+                    "*photo":"##,
+                    "*authority":"##",
+                    "*empty":"##"
+                }
+            ]
+-------------------------------------------------------
+    退出账户
+        Request:
+            http://ip:8080/logoutAccount
+            data:
+            [
+                {
+                    "*token":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+-------------------------------------------------------
+    注销账户
+        Request:
+            http://ip:8080/deleteAccount
+            data:
+            [
+                {
+                    "*token":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+-------------------------------------------------------
+    修改密码
+        Request:
+            http://ip:8080/updatePassword
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*password":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+-------------------------------------------------------
+    修改昵称
+        Request:
+            http://ip:8080/updateNickname
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*nickname":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+-------------------------------------------------------
+    修改头像
+        Request:
+            http://ip:8080/updatePhoto
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*photo":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+=======================================================
+管理员账户(*为非空,#为数据)
+（注：管理员账户为基础用户的升级账户，故上述接口对于管理员账户均适用，以下不再赘述）
+-------------------------------------------------------
+    查看基础账户（列表）
+        Request:
+            http://ip:8080/selectBasicList
+            data:
+            [
+                {
+                    "*token":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                },
+                {
+                    "id":"##",
+                    "empty":"##",
+                    "deleted":"##"
+                },
+                ...
+            ]
+-------------------------------------------------------
+    重置基础账户密码（特定）
+        Request:
+            http://ip:8080/updateBasicPassword
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*basicId":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+-------------------------------------------------------
+    重置基础账户容量（特定）
+        Request:
+            http://ip:8080/updateBasicEmpty
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*basicId":"##",
+                    "*empty":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+-------------------------------------------------------
+    注销基础账户（特定）
+        Request:
+            http://ip:8080/deleteBasicAccount
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*basicId":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+=======================================================
+超级管理员账户(*为非空,#为数据)
+（注：超级管理员账户为管理员账户的升级账户，故上述接口对于超级管理员账户均适用，以下不再赘述）
+-------------------------------------------------------
+    查看管理员账户（列表）
+        Request:
+            http://ip:8080/selectManagementList
+            data:
+            [
+                {
+                    "*token":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                },
+                {
+                    "id":"##",
+                    "deleted":"##"
+                },
+                ...
+            ]
+-------------------------------------------------------
+    重置管理员账户密码（特定）
+        Request:
+            http://ip:8080/updateManagementPassword
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*managementId":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+-------------------------------------------------------
+    注销管理员账户（特定）
+        Request:
+            http://ip:8080/deleteManagementAccount
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*managementId":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+-------------------------------------------------------
+    修改账户权限（00/01）
+        Request:
+            http://ip:8080/updateAuthority
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*id":"##",
+                    "*authority":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+=======================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
