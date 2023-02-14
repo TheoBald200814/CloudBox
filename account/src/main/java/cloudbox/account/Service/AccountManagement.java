@@ -7,13 +7,14 @@ import javax.validation.constraints.*;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.List;
 /*
 * Blob和account_empty的检查待完善*/
 
 /**
  * 账户管理接口
  * @author TheoBald
- * @version 0.0.1
+ * @version 0.0.2
  */
 public interface AccountManagement {
 
@@ -88,6 +89,13 @@ public interface AccountManagement {
      * @return accountEmpty（若存在该账户，则返回其accountEmpty；若不存在，则返回-1）
      */
     long readAccountEmpty(@NotBlank @Size(min=10,max=30) @Email String accountId) throws IOException, SQLException;
+
+
+    /**
+     * 账户列表检查
+     * @return 账户列表
+     */
+    List<Account> readAccountList(@NotNull @Min(0) @Max(1) byte authority);
 
 
     /**

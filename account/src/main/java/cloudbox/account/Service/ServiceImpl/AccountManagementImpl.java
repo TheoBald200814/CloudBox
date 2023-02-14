@@ -14,11 +14,12 @@ import javax.validation.constraints.*;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * 账户管理服务接口实现
  * @author TheoBald
- * @version 0.0.1
+ * @version 0.0.2
  */
 @Service
 @Validated
@@ -313,6 +314,17 @@ public class AccountManagementImpl implements AccountManagement {
 
             return account.getAccountEmpty();
         }
+    }
+
+
+    /**
+     * 账户列表检查
+     * @return 账户列表
+     */
+    @Override
+    public List<Account> readAccountList(@NotNull @Min(0) @Max(1) byte authority){
+
+        return  accountMapper.selectList(new QueryWrapper<Account>().select("account_id","account_empty","deleted").apply("authority = {0}",authority));
     }
 
 
