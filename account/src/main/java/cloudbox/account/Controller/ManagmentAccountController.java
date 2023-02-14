@@ -60,9 +60,7 @@ public class ManagmentAccountController {
             return result;
         }
 
-        List<Account> accountList = accountManagement.readAccountList((byte) 0);
-
-        return accountList;
+        return accountManagement.readAccountList((byte) 0);
     }
 
 
