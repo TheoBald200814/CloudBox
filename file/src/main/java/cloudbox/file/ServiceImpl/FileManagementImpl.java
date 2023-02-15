@@ -4,6 +4,7 @@ import cloudbox.file.Bean.File;
 import cloudbox.file.Service.FileManagement;
 import cloudbox.file.mapper.Mapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -295,7 +296,6 @@ public class FileManagementImpl implements FileManagement {
                 return null;
             }
         }
-
     }
 
 
@@ -312,8 +312,25 @@ public class FileManagementImpl implements FileManagement {
                                   @NotBlank @Size(max = 30, min = 10) String fileId,
                                   @NotBlank @Size(max = 20, min = 1) String newFileName) {
 
+        if(fileRedisUtil.get(fileId, fileName) != null){
+            //若该账户目前在Redis缓存中
+            fileRedisUtil.update(fileId,fileName,"fileName",newFileName);
+            //更新Redis缓存
+        }
 
-        return false;
+        UpdateWrapper<File> updateWrapper=new UpdateWrapper<File>();
+
+        updateWrapper.eq("file_id",fileId).eq("file_name",fileName).set("file_name",newFileName);
+
+        Integer rows=fileMapper.update(null,updateWrapper);
+        //更新MySQL
+        if(rows>0){
+
+            return true;
+        }else {
+
+            return false;
+        }
     }
 
     /**
@@ -325,8 +342,29 @@ public class FileManagementImpl implements FileManagement {
      * @return 更新成功返回true；更新失败返回false
      */
     @Override
-    public boolean updateFileSize(@NotBlank @Size(max = 20, min = 1) String fileName, @NotBlank @Size(max = 30, min = 10) String fileId, @NotNull long newFileSize) {
-        return false;
+    public boolean updateFileSize(@NotBlank @Size(max = 20, min = 1) String fileName,
+                                  @NotBlank @Size(max = 30, min = 10) String fileId,
+                                  @NotNull long newFileSize) {
+
+        if(fileRedisUtil.get(fileId, fileName) != null){
+            //若该账户目前在Redis缓存中
+            fileRedisUtil.update(fileId,fileName,"fileSize",String.valueOf(newFileSize));
+            //更新Redis缓存
+        }
+
+        UpdateWrapper<File> updateWrapper=new UpdateWrapper<File>();
+
+        updateWrapper.eq("file_id",fileId).eq("file_name",fileName).set("file_size",newFileSize);
+
+        Integer rows=fileMapper.update(null,updateWrapper);
+        //更新MySQL
+        if(rows>0){
+
+            return true;
+        }else {
+
+            return false;
+        }
     }
 
     /**
@@ -338,8 +376,29 @@ public class FileManagementImpl implements FileManagement {
      * @return 更新成功返回true；更新失败返回false
      */
     @Override
-    public boolean updateFileType(@NotBlank @Size(max = 20, min = 1) String fileName, @NotBlank @Size(max = 30, min = 10) String fileId, @NotBlank @Size(max = 10, min = 1) String newFileType) {
-        return false;
+    public boolean updateFileType(@NotBlank @Size(max = 20, min = 1) String fileName,
+                                  @NotBlank @Size(max = 30, min = 10) String fileId,
+                                  @NotBlank @Size(max = 10, min = 1) String newFileType) {
+
+        if(fileRedisUtil.get(fileId, fileName) != null){
+            //若该账户目前在Redis缓存中
+            fileRedisUtil.update(fileId,fileName,"fileType",newFileType);
+            //更新Redis缓存
+        }
+
+        UpdateWrapper<File> updateWrapper=new UpdateWrapper<File>();
+
+        updateWrapper.eq("file_id",fileId).eq("file_name",fileName).set("file_type",newFileType);
+
+        Integer rows=fileMapper.update(null,updateWrapper);
+        //更新MySQL
+        if(rows>0){
+
+            return true;
+        }else {
+
+            return false;
+        }
     }
 
     /**
@@ -351,8 +410,29 @@ public class FileManagementImpl implements FileManagement {
      * @return 更新成功返回true；更新失败返回false
      */
     @Override
-    public boolean updateFileDate(@NotBlank @Size(max = 20, min = 1) String fileName, @NotBlank @Size(max = 30, min = 10) String fileId, @NotNull Timestamp newFileDate) {
-        return false;
+    public boolean updateFileDate(@NotBlank @Size(max = 20, min = 1) String fileName,
+                                  @NotBlank @Size(max = 30, min = 10) String fileId,
+                                  @NotNull Timestamp newFileDate) {
+
+        if(fileRedisUtil.get(fileId, fileName) != null){
+            //若该账户目前在Redis缓存中
+            fileRedisUtil.update(fileId,fileName,"fileDate",String.valueOf(newFileDate));
+            //更新Redis缓存
+        }
+
+        UpdateWrapper<File> updateWrapper=new UpdateWrapper<File>();
+
+        updateWrapper.eq("file_id",fileId).eq("file_name",fileName).set("file_date",newFileDate);
+
+        Integer rows=fileMapper.update(null,updateWrapper);
+        //更新MySQL
+        if(rows>0){
+
+            return true;
+        }else {
+
+            return false;
+        }
     }
 
     /**
@@ -364,8 +444,30 @@ public class FileManagementImpl implements FileManagement {
      * @return 更新成功返回true；更新失败返回false
      */
     @Override
-    public boolean updateFileDownloadCount(@NotBlank @Size(max = 20, min = 1) String fileName, @NotBlank @Size(max = 30, min = 10) String fileId, @NotNull int newFileDownloadCount) {
-        return false;
+    public boolean updateFileDownloadCount(@NotBlank @Size(max = 20, min = 1) String fileName,
+                                           @NotBlank @Size(max = 30, min = 10) String fileId,
+                                           @NotNull int newFileDownloadCount) {
+
+        if(fileRedisUtil.get(fileId, fileName) != null){
+            //若该账户目前在Redis缓存中
+            fileRedisUtil.update(fileId,fileName,"fileDownloadCount",String.valueOf(newFileDownloadCount));
+            //更新Redis缓存
+        }
+
+        UpdateWrapper<File> updateWrapper=new UpdateWrapper<File>();
+
+        updateWrapper.eq("file_id",fileId).eq("file_name",fileName).set("download_count",newFileDownloadCount);
+
+        Integer rows=fileMapper.update(null,updateWrapper);
+        //更新MySQL
+        if(rows>0){
+
+            return true;
+        }else {
+
+            return false;
+        }
+
     }
 
     /**
@@ -373,12 +475,33 @@ public class FileManagementImpl implements FileManagement {
      *
      * @param fileName             文件名
      * @param fileId               文件所有者
-     * @param newFileDownloadCount 新文件下载次数
+     * @param newFileUrl 新文件下载次数
      * @return 更新成功返回true；更新失败返回false
      */
     @Override
-    public boolean updateFileURL(@NotBlank @Size(max = 20, min = 1) String fileName, @NotBlank @Size(max = 30, min = 10) String fileId, @NotBlank String newFileDownloadCount) {
-        return false;
+    public boolean updateFileURL(@NotBlank @Size(max = 20, min = 1) String fileName,
+                                 @NotBlank @Size(max = 30, min = 10) String fileId,
+                                 @NotBlank String newFileUrl) {
+
+        if(fileRedisUtil.get(fileId, fileName) != null){
+            //若该账户目前在Redis缓存中
+            fileRedisUtil.update(fileId,fileName,"fileUrl",String.valueOf(newFileUrl));
+            //更新Redis缓存
+        }
+
+        UpdateWrapper<File> updateWrapper=new UpdateWrapper<File>();
+
+        updateWrapper.eq("file_id",fileId).eq("file_name",fileName).set("file_url",newFileUrl);
+
+        Integer rows=fileMapper.update(null,updateWrapper);
+        //更新MySQL
+        if(rows>0){
+
+            return true;
+        }else {
+
+            return false;
+        }
     }
 
     /**
@@ -389,7 +512,20 @@ public class FileManagementImpl implements FileManagement {
      * @return 删除成，返回true；删除失败，返回false
      */
     @Override
-    public boolean deleteFCB(@NotBlank @Size(max = 20, min = 1) String fileName, @NotBlank @Size(max = 30, min = 10) String fileId) {
-        return false;
+    public boolean deleteFCB(@NotBlank @Size(max = 20, min = 1) String fileName,
+                             @NotBlank @Size(max = 30, min = 10) String fileId) {
+
+        if(fileRedisUtil.get(fileId, fileName) != null){
+            //若该账户目前在Redis缓存中
+            fileRedisUtil.delete(fileId,fileName);
+            //删除Redis缓存
+        }
+        int result = fileMapper.delete(new QueryWrapper<File>().apply("file_id={0} and file_name={1}",fileId,fileName));
+        //删除MySQL中的记录
+        if(result == 1){
+            return true;
+        }else {
+            return false;
+        }
     }
 }

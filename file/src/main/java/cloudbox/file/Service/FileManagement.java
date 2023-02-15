@@ -169,12 +169,12 @@ public interface FileManagement {
      * 更新文件路径
      * @param fileName 文件名
      * @param fileId 文件所有者
-     * @param newFileDownloadCount 新文件下载次数
+     * @param newFileUrl 新文件下载次数
      * @return 更新成功返回true；更新失败返回false
      */
     boolean updateFileURL(@NotBlank @Size(max = 20, min = 1) String fileName,
                           @NotBlank @Size(max = 30, min = 10) String fileId,
-                          @NotBlank String newFileDownloadCount);
+                          @NotBlank String newFileUrl);
 
 
     /**

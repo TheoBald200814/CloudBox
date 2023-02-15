@@ -111,4 +111,15 @@ public class FileRedisUtil {
         //缓存有效期刷新
     }
 
+
+    /**
+     * FCB缓存删除
+     * @param fileId 文件Id（Redis中作为Key前半部分）
+     * @param fileName 文件名（Redis中作为Key后半部分）
+     */
+    void delete(String fileId, String fileName){
+
+        redisTemplate.opsForHash().delete(fileId + "&%&" + fileName,"fileType","fileSize","fileUrl","fileDate","fileDownloadCount");
+    }
+
 }
