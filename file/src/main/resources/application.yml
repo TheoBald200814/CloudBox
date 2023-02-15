@@ -1,0 +1,36 @@
+server:
+  port: 8082
+
+spring:
+
+  datasource:
+    name: cloud_box  #数据库名
+    url: jdbc:mysql://rm-bp12o076k95u118i2oo.mysql.rds.aliyuncs.com:3306/cloud_box #url
+    username: cloud_box_file #用户名
+    password: Cloud_box_file #密码
+    driver-class-name: com.mysql.cj.jdbc.Driver  #数据库链接驱动
+
+  redis:
+    enabled: true
+    database_file: 3
+    database_token: 2
+    host: 43.142.148.141
+    port: 6379
+    password: 123456
+    #连接超时时间（毫秒）
+    timeout: 1800000
+    #连接池最大连接数（使用负值表示没有限制）
+    lettuce.pool.max-active: 20
+    #最大阻塞等待时间(负数表示没限制)
+    lettuce.pool.max-wait: -1
+    #连接池中的最大空闲连接
+    lettuce.pool.max-idle: 5
+    #连接池中的最小空闲连接
+    lettuce.pool.min-idle: 0
+
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.java # 扫描注解映射类
+  type-aliases-package: cloudbox.file.Bean # 扫描实体类
+
+
