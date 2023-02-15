@@ -16,10 +16,11 @@ import java.sql.Timestamp;
 @TableName("file")
 public class File {
 
+    @TableId(type = IdType.INPUT)
     private String fileName;
     //文件名（1-20位字符串，主键非空）
 
-    @TableId(type = IdType.INPUT)
+
     private String fileId;
     //文件Id（10-30位字符串，外键非空）
 
@@ -93,7 +94,5 @@ public class File {
     public void setFileUrl(String fileUrl) {
         this.fileUrl = fileUrl;
     }
-
-
 
 }
