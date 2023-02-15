@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 
 @org.apache.ibatis.annotations.Mapper
 public class Mapper {
+
     public interface AccountMapper extends BaseMapper<Account> {
 
 

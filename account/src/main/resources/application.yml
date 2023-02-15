@@ -29,11 +29,6 @@ spring:
     lettuce.pool.min-idle: 0
 
 
-
-
-
-
-
 mybatis-plus:
   mapper-locations: classpath:mapper/*.java # 扫描注解映射类
   type-aliases-package: cloudbox.account.Bean # 扫描实体类

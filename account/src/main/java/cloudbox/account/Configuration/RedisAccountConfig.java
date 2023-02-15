@@ -15,12 +15,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class RedisAccountConfig extends RedisConfig {
 
     @Value("${spring.redis.database_account}")
-    private int studentDatabase;
+    private int AccountDatabase;
 
     @Bean(name = "AccountRedisTemplate")
     public RedisTemplate<String, Object> redisTemplate(){
 
-        return getRedisTemplate(studentDatabase);
+        return getRedisTemplate(AccountDatabase);
     }
 
 }
