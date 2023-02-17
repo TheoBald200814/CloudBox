@@ -2,10 +2,12 @@ package cloudbox.file.Service;
 
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.IOException;
 import java.sql.Timestamp;
 
 /**
@@ -32,7 +34,7 @@ public interface FileManagement {
                       @NotBlank @Size(max = 10, min = 1) String fileType,
                       @NotNull Timestamp fileDate,
                       @NotNull int downloadCount,
-                      @NotBlank String url);
+                      MultipartFile file) throws IOException;
 
 
     /**
@@ -174,7 +176,7 @@ public interface FileManagement {
      */
     boolean updateFileURL(@NotBlank @Size(max = 20, min = 1) String fileName,
                           @NotBlank @Size(max = 30, min = 10) String fileId,
-                          @NotBlank String newFileUrl);
+                          @NotBlank String newFileUrl) throws IOException;
 
 
     /**
@@ -185,5 +187,6 @@ public interface FileManagement {
      */
     boolean deleteFCB(@NotBlank @Size(max = 20, min = 1) String fileName,
                       @NotBlank @Size(max = 30, min = 10) String fileId);
+
 
 }

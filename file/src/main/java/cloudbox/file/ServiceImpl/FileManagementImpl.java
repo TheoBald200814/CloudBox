@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -32,6 +33,9 @@ public class FileManagementImpl implements FileManagement {
     @Autowired
     private FileRedisUtil fileRedisUtil;
 
+    @Autowired
+    private FtpClientUtil ftpClientUtil;
+
 
     /**
      * 创建文件控制块（FCB）
@@ -42,7 +46,7 @@ public class FileManagementImpl implements FileManagement {
      * @param fileType      文件类型
      * @param fileDate      更新日期
      * @param downloadCount 下载次数
-     * @param url
+     * @param file          文件数据
      * @return 文件url
      */
     @Override
@@ -52,47 +56,61 @@ public class FileManagementImpl implements FileManagement {
                              @NotBlank @Size(max = 10, min = 1) String fileType,
                              @NotNull Timestamp fileDate,
                              @NotNull int downloadCount,
-                             @NotBlank String url) {
+                             MultipartFile file) throws IOException {
 
-         Object temp = fileMapper.selectOne(new QueryWrapper<File>().select("file_name").apply("file_name={0} and file_id={1}",fileName,fileId));
-         //检查是否有相同FCB存在
-
-         if(temp != null){
-             //若存在相同FCB，则创建失败
-
-             System.out.println("文件已存在");
-             return null;
-         }
-         File file = new File();
-
-         file.setFileId(fileId);
-         file.setFileName(fileName);
-         file.setFileSize(fileSize);
-         file.setFileDate(fileDate);
-         file.setFileUrl(url);
-         file.setFileType(fileType);
-         file.setDownloadCount(downloadCount);
-         //FCB装箱
-         int judgeSQL = fileMapper.insert(file);
-         //FCB插入MySQL
-        if(judgeSQL == 1){
-            //如果SQL执行成功
-            boolean judgeRedis = fileRedisUtil.set(file);
-            //录入Redis
-            if(judgeRedis){
-                //录入Redis成功，返回文件路径
-                return url;
-            }else {
-
-                System.out.println("创建账户-录入Redis失败");
-                return url;
-                //Redis录入失败
-            }
-        }else{
-
-            System.out.println("创建账户-录入MySQL失败");
+        Object temp = fileMapper.selectOne(new QueryWrapper<File>().select("file_name").apply("file_name={0} and file_id={1}",fileName,fileId));
+        //检查是否有相同FCB存在
+        if(temp != null){
+            //若存在相同FCB，则创建失败
+            System.out.println("文件已存在");
             return null;
-            //SQL执行失败
+        }
+        String fileToken = fileId + fileName;
+        //生成文件令牌（待优化）
+        String url = fileId + "/" + fileToken;
+        //url结构：/文件所述用户/文件令牌
+        File fcb = new File();
+
+        fcb.setFileId(fileId);
+        fcb.setFileName(fileName);
+        fcb.setFileSize(fileSize);
+        fcb.setFileDate(fileDate);
+        fcb.setFileType(fileType);
+        fcb.setDownloadCount(downloadCount);
+        fcb.setFileUrl(url);
+        //FCB装箱
+        boolean uploadJudge = ftpClientUtil.uploadFile(file, fileId + "/",fileToken);
+        //文件数据上传
+        if(uploadJudge){
+            //如果文件上传成功
+            System.out.println(fileToken + ":文件上传成功");
+            //文件上传成功
+            int judgeSQL = fileMapper.insert(fcb);
+            //FCB插入MySQL
+            if(judgeSQL == 1){
+                //如果SQL执行成功
+                boolean judgeRedis = fileRedisUtil.set(fcb);
+                //录入Redis
+                if(judgeRedis){
+                    //如果录入Redis成功，返回文件路径
+                    return url;
+                }else {
+                    System.out.println("创建FCB-录入Redis失败");
+                    return url;
+                    //Redis录入失败
+                }
+            }else{
+                //SQL执行失败
+                System.out.println("创建FCB-录入MySQL失败");
+                System.out.println("[严重：文件数据已上传，正在撤回文件数据，回收空间]");
+
+                //TODO...文件撤回策略
+                ftpClientUtil.deleteFile(url);
+                return null;
+            }
+        }else {
+            //文件上传失败
+            return null;
         }
     }
 
@@ -481,7 +499,11 @@ public class FileManagementImpl implements FileManagement {
     @Override
     public boolean updateFileURL(@NotBlank @Size(max = 20, min = 1) String fileName,
                                  @NotBlank @Size(max = 30, min = 10) String fileId,
-                                 @NotBlank String newFileUrl) {
+                                 @NotBlank String newFileUrl) throws IOException {
+
+        String url = readFileURL(fileName,fileId);
+        //暂存原始url
+        System.out.println(url);
 
         if(fileRedisUtil.get(fileId, fileName) != null){
             //若该账户目前在Redis缓存中
@@ -496,6 +518,8 @@ public class FileManagementImpl implements FileManagement {
         Integer rows=fileMapper.update(null,updateWrapper);
         //更新MySQL
         if(rows>0){
+            //如果MySQL更新成功
+            ftpClientUtil.updateFileToken(url,newFileUrl);
 
             return true;
         }else {
@@ -520,6 +544,8 @@ public class FileManagementImpl implements FileManagement {
             fileRedisUtil.delete(fileId,fileName);
             //删除Redis缓存
         }
+
+        
         int result = fileMapper.delete(new QueryWrapper<File>().apply("file_id={0} and file_name={1}",fileId,fileName));
         //删除MySQL中的记录
         if(result == 1){

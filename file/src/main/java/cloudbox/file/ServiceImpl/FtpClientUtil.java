@@ -26,7 +26,7 @@ public class FtpClientUtil {
     // FTP登录用户名
     private static final String FTP_PASS = "qpddf_234";
     // FTP登录密码
-    private static final String FTP_BASEPATH = "/home/data/ftptest";
+    private static final String FTP_BASEPATH = "/home/data/ftptest/";
     // FTP服务器基础路径
 
 
@@ -34,10 +34,10 @@ public class FtpClientUtil {
      * 文件上传方法
      * @param file 文件数据
      * @param remotePath 上传路径
-     * @param fileName 上传名
+     * @param fileToken 文件令牌
      * @return 上传成功，返回true；上传失败，返回false
      */
-    public boolean uploadFile(MultipartFile file, String remotePath, String fileName) {
+    boolean uploadFile(MultipartFile file, String remotePath, String fileToken) {
 
         boolean result = false;
 
@@ -52,13 +52,13 @@ public class FtpClientUtil {
 
             if (!ftpClient.changeWorkingDirectory(FTP_BASEPATH + remotePath)) {
                 //如果路径不存在，则创建该路径并跳转到该路径
-                ftpClient.makeDirectory(remotePath);
+                ftpClient.makeDirectory(FTP_BASEPATH + remotePath);
                 ftpClient.changeWorkingDirectory(FTP_BASEPATH + remotePath);
             }
 
             InputStream inputStream = file.getInputStream();
             //文件转输入流
-            result = ftpClient.storeFile(fileName, inputStream);
+            result = ftpClient.storeFile(fileToken, inputStream);
             //执行FTP文件传输
             inputStream.close();
             //输入流关闭
@@ -79,7 +79,15 @@ public class FtpClientUtil {
     }
 
 
-    public void downloadFileFromFTP(String fileName, String remotePath, HttpServletResponse response) throws IOException {
+    /**
+     * 文件下载方法
+     * @param fileToken 文件令牌
+     * @param remotePath 下载路径
+     * @param fileName 文件原名
+     * @param response 前端响应
+     * @throws IOException
+     */
+    void downloadFile(String fileToken, String remotePath, String fileName, HttpServletResponse response) throws IOException {
 
         FTPClient ftpClient = new FTPClient();
         try {
@@ -90,10 +98,10 @@ public class FtpClientUtil {
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 
             // 设置工作目录
-            ftpClient.changeWorkingDirectory(remotePath);
+            ftpClient.changeWorkingDirectory(FTP_BASEPATH + remotePath);
 
             // 下载文件并输出到前端
-            String remoteFile = fileName;
+            String remoteFile = fileToken;
             OutputStream outputStream = response.getOutputStream();
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
@@ -105,5 +113,57 @@ public class FtpClientUtil {
             ftpClient.disconnect();
         }
     }
+
+    /**
+     * 文件更新方法（更新文件位置和文件名）
+     * @param from 文件原路径（基础路径为/home/data/ftptest/）
+     * @param to 文件目的路径（基础路径同上）
+     * @return 更新成功返回true；更新失败返回false
+     * @throws IOException
+     */
+    boolean updateFileToken(String from, String to) throws IOException {
+
+        FTPClient ftpClient = new FTPClient();
+        try {
+            //建立FTP服务器连接
+            ftpClient.connect(FTP_HOST, FTP_PORT);
+            ftpClient.login(FTP_USER, FTP_PASS);
+            ftpClient.enterLocalPassiveMode();
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+
+            ftpClient.changeWorkingDirectory(FTP_BASEPATH );
+            // 设置工作目录
+            return ftpClient.rename(from,to);
+            //修改文件名（令牌）
+        } finally {
+            // 断开连接
+            ftpClient.logout();
+            ftpClient.disconnect();
+        }
+    }
+
+    public boolean deleteFile(String remotePath) throws IOException {
+
+        FTPClient ftpClient = new FTPClient();
+        try {
+            //建立FTP服务器连接
+            ftpClient.connect(FTP_HOST, FTP_PORT);
+            ftpClient.login(FTP_USER, FTP_PASS);
+            ftpClient.enterLocalPassiveMode();
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+
+            ftpClient.changeWorkingDirectory(FTP_BASEPATH );
+            // 设置工作目录
+            return ftpClient.deleteFile(remotePath);
+        } finally {
+            // 断开连接
+            ftpClient.logout();
+            ftpClient.disconnect();
+        }
+
+
+    }
+
+
 
 }
