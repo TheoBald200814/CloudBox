@@ -142,7 +142,14 @@ public class FtpClientUtil {
         }
     }
 
-    public boolean deleteFile(String remotePath) throws IOException {
+
+    /**
+     * 文件删除方法
+     * @param remotePath 文件路径
+     * @return 删除成功，返回true；删除失败，返回false
+     * @throws IOException
+     */
+    boolean deleteFile(String remotePath) throws IOException {
 
         FTPClient ftpClient = new FTPClient();
         try {
@@ -160,10 +167,6 @@ public class FtpClientUtil {
             ftpClient.logout();
             ftpClient.disconnect();
         }
-
-
     }
-
-
 
 }

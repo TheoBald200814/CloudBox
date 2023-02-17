@@ -186,7 +186,7 @@ public interface FileManagement {
      * @return 删除成，返回true；删除失败，返回false
      */
     boolean deleteFCB(@NotBlank @Size(max = 20, min = 1) String fileName,
-                      @NotBlank @Size(max = 30, min = 10) String fileId);
+                      @NotBlank @Size(max = 30, min = 10) String fileId) throws IOException;
 
 
 }

@@ -501,18 +501,22 @@ public class FileManagementImpl implements FileManagement {
                                  @NotBlank @Size(max = 30, min = 10) String fileId,
                                  @NotBlank String newFileUrl) throws IOException {
 
-        String url = readFileURL(fileName,fileId);
-        //暂存原始url
-        System.out.println(url);
+        String url;
 
-        if(fileRedisUtil.get(fileId, fileName) != null){
+        File redisResult = fileRedisUtil.get(fileId,fileName);
+
+        if(redisResult != null){
             //若该账户目前在Redis缓存中
+            url =redisResult.getFileUrl();
+            //暂存原始url
             fileRedisUtil.update(fileId,fileName,"fileUrl",String.valueOf(newFileUrl));
             //更新Redis缓存
+        }else {
+            //若Redis未命中FCB
+            url = readFileURL(fileName,fileId);
+            //从MySQL获取原始url
         }
-
         UpdateWrapper<File> updateWrapper=new UpdateWrapper<File>();
-
         updateWrapper.eq("file_id",fileId).eq("file_name",fileName).set("file_url",newFileUrl);
 
         Integer rows=fileMapper.update(null,updateWrapper);
@@ -537,18 +541,28 @@ public class FileManagementImpl implements FileManagement {
      */
     @Override
     public boolean deleteFCB(@NotBlank @Size(max = 20, min = 1) String fileName,
-                             @NotBlank @Size(max = 30, min = 10) String fileId) {
+                             @NotBlank @Size(max = 30, min = 10) String fileId) throws IOException {
 
-        if(fileRedisUtil.get(fileId, fileName) != null){
+        File redisResult = fileRedisUtil.get(fileId,fileName);
+
+        String url;
+
+        if(redisResult != null){
             //若该账户目前在Redis缓存中
+            url = redisResult.getFileUrl();
+            //通过redisResult获取原始url
             fileRedisUtil.delete(fileId,fileName);
             //删除Redis缓存
+        }else {
+            //若Redis未命中FCB
+            url = readFileURL(fileName,fileId);
+            //从MySQL中获取原始url
         }
-
-        
-        int result = fileMapper.delete(new QueryWrapper<File>().apply("file_id={0} and file_name={1}",fileId,fileName));
+        int resultMySQL = fileMapper.delete(new QueryWrapper<File>().apply("file_id={0} and file_name={1}",fileId,fileName));
         //删除MySQL中的记录
-        if(result == 1){
+        boolean resultFtp = ftpClientUtil.deleteFile(url);
+        //删除文件数据
+        if(resultMySQL == 1 && resultFtp){
             return true;
         }else {
             return false;
