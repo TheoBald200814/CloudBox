@@ -5,12 +5,13 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {Button} from "@mui/material";
 import UploadFile from "./UploadFile";
+import DownloadFile from "./DownloadFile";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
       <Button variant="contained">Contained</Button>
-      <UploadFile/>
+      <DownloadFile/>
   </React.StrictMode>
 );
 

@@ -16,57 +16,15 @@ import java.net.SocketException;
 public class FTP {
 
     //服务器IP
-    private static final String  FTP_ADDRESS = "47.113.205.232";
+    private static final String  FTP_ADDRESS = "47.115.208.235";
     //端口号
     private static final int FTP_PORT = 21;
     //用户名
-    private static final String FTP_USERNAME = "ftp_01";
+    private static final String FTP_USERNAME = "ftptest";
     //密码
-    private static final String FTP_PASSWORD = "365208200814";
+    private static final String FTP_PASSWORD = "qpddf_234";
 
-    public boolean uploadFile(String fileName, InputStream inputStream) throws IOException {
 
-        boolean flag = false;
-        FTPClient ftp = new FTPClient();
-
-        try{
-            //连接服务器
-            int reply;
-            ftp.connect(FTP_ADDRESS,FTP_PORT);
-            ftp.login(FTP_USERNAME,FTP_PASSWORD);
-            reply = ftp.getReplyCode();
-            if(!FTPReply.isPositiveCompletion(reply)) {
-                ftp.disconnect();
-                return false;
-            }
-
-            //上传文件到服务器
-            ftp.changeWorkingDirectory("/ftp_01");
-
-            ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
-
-            ftp.enterLocalPassiveMode();
-
-            String fileName_iso = new String(fileName.getBytes("GBK"),"iso-8859-1");
-
-            ftp.storeFile(fileName_iso,inputStream);
-
-            inputStream.close();
-
-            ftp.logout();
-
-            flag = true;
-        } catch (SocketException e) {
-
-            e.printStackTrace();
-        } finally {
-            if (ftp.isConnected()) {
-
-                ftp.disconnect();
-            }
-        }
-        return flag;
-    }
 
 
     public void download_new(HttpServletRequest request, HttpServletResponse response, String fileName) throws Exception {

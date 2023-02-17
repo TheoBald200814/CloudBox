@@ -24,6 +24,11 @@ class UploadFile extends React.Component {
         });
     };
 
+    handleFileDownload = () => {
+
+
+    }
+
     render() {
         return (
             <div>
