@@ -1,0 +1,148 @@
+
+前后端数据交互协议————文件区
+
+数据汇总
+
+    fileId:文件id（10-30位Email格式字符串，外键）
+    fileName:文件名（1-20位字符串，主键非空）
+    fileSize:文件大小（非空）
+    fileType:文件类型（1-10位字符串，非空）
+    fileDate:更新日期（日期格式，非空）
+    downloadCount:下载次数（非空，默认0）
+    fileUrl:文件路径（1-255位字符串，非空）
+=======================================================
+基础用户(*为非空,#为数据)
+-------------------------------------------------------
+    创建文件（上传）
+        Request:
+            http://ip:8080/createFile
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*fileName":"##",
+                    "*file":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure",
+                    "*url":"##"
+                }
+            ]
+-------------------------------------------------------
+    修改文件名
+        Request:
+            http://ip:8080/updateFileName
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*fileName":"##",
+                    "*newFileName":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+-------------------------------------------------------
+    修改文件类型
+        Request:
+            http://ip:8080/updateFileType
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*fileName":"##",
+                    "*newFileType":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+-------------------------------------------------------
+    下载文件
+        Request:
+            http://ip:8080/DownloadFile
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*fileName":"##",
+                    "*response":"##"
+                }
+            ]
+        Response:/
+-------------------------------------------------------
+    查看个人文件列表
+        Request:
+            http://ip:8080/readFileList
+            data:
+            [
+                {
+                    "*token":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*fileName":"##",
+                    "*fileSize":"##",
+                    "*fileType":"##",
+                    "*fileDate":"##",
+                    "*fileDownloadCount":"##"
+                },
+                {
+                    "*fileName":"##",
+                    "*fileSize":"##",
+                    "*fileType":"##",
+                    "*fileDate":"##",
+                    "*fileDownloadCount":"##"
+                },
+                ...
+            ]
+-------------------------------------------------------
+    删除文件
+        Request:
+            http://ip:8080/deleteFile
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*fileName":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+=======================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -74,7 +74,9 @@ public class test {
 
 //        ftpClientUtil.downloadFile("controller_4@test.comtest","controller_4@test.com/","233",response);
 
-        fileManagement.downloadFile("test","controller_4@test.com",response);
+//        fileManagement.downloadFile("test","controller_4@test.com",response);
+
+        fileManagement.deleteFCB("test","controller_4@test.com");
 
 
 
