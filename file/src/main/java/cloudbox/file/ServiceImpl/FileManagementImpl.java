@@ -3,6 +3,7 @@ package cloudbox.file.ServiceImpl;
 import cloudbox.file.Bean.File;
 import cloudbox.file.Service.FileManagement;
 import cloudbox.file.mapper.Mapper;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +11,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.List;
 
 
 /**
@@ -277,6 +280,37 @@ public class FileManagementImpl implements FileManagement {
 
 
     /**
+     * 文件列表检查
+     * @param fileId 文件所有者
+     * @return 文件所有者文件列表
+     */
+    @Override
+    public List<File> readFileList(@NotBlank @Size(max = 30, min = 10) String fileId){
+
+        return fileMapper.selectList(new QueryWrapper<File>().select("file_name","file_size","file_type","file_date","download_count").apply("file_id={0}",fileId));
+    }
+
+
+    /**
+     * 文件下载
+     * @param fileName 文件名
+     * @param fileId 文件所有者
+     * @param response 下载响应
+     */
+    @Override
+    public void downloadFile(@NotBlank @Size(max = 20, min = 1) String fileName,
+                             @NotBlank @Size(max = 30, min = 10) String fileId,
+                             HttpServletResponse response) throws IOException {
+
+        String url = readFileURL(fileName,fileId);
+        //获取文件路径
+        String [] temp = url.split("/");
+        //解析文件路径
+        ftpClientUtil.downloadFile(temp[1], temp[0] + "/", fileName, response);
+    }
+
+
+    /**
      * FCB查找
      * @param fileId 文件Id
      * @param fileName 文件名
@@ -471,7 +505,6 @@ public class FileManagementImpl implements FileManagement {
             fileRedisUtil.update(fileId,fileName,"fileDownloadCount",String.valueOf(newFileDownloadCount));
             //更新Redis缓存
         }
-
         UpdateWrapper<File> updateWrapper=new UpdateWrapper<File>();
 
         updateWrapper.eq("file_id",fileId).eq("file_name",fileName).set("download_count",newFileDownloadCount);
@@ -479,13 +512,10 @@ public class FileManagementImpl implements FileManagement {
         Integer rows=fileMapper.update(null,updateWrapper);
         //更新MySQL
         if(rows>0){
-
             return true;
         }else {
-
             return false;
         }
-
     }
 
     /**
@@ -524,10 +554,8 @@ public class FileManagementImpl implements FileManagement {
         if(rows>0){
             //如果MySQL更新成功
             ftpClientUtil.updateFileToken(url,newFileUrl);
-
             return true;
         }else {
-
             return false;
         }
     }

@@ -1,14 +1,17 @@
 package cloudbox.file.Service;
 
 
+import cloudbox.file.Bean.File;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * 文件管理接口
@@ -105,6 +108,25 @@ public interface FileManagement {
      */
     String readFileURL(@NotBlank @Size(max = 20, min = 1) String fileName,
                        @NotBlank @Size(max = 30, min = 10) String fileId);
+
+
+    /**
+     * 文件列表检查
+     * @param fileId 文件所有者
+     * @return 文件所有者文件列表
+     */
+    List<File> readFileList(@NotBlank @Size(max = 30, min = 10) String fileId);
+
+
+    /**
+     * 文件下载
+     * @param fileName 文件名
+     * @param fileId 文件所有者
+     * @param response 下载响应
+     */
+    void downloadFile(@NotBlank @Size(max = 20, min = 1) String fileName,
+                      @NotBlank @Size(max = 30, min = 10) String fileId,
+                      HttpServletResponse response) throws IOException;
 
 
     /**

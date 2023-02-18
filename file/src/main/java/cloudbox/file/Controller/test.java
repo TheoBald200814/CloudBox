@@ -2,8 +2,6 @@ package cloudbox.file.Controller;
 
 
 import cloudbox.file.Service.FileManagement;
-import cloudbox.file.ServiceImpl.FTP;
-import cloudbox.file.ServiceImpl.FileRedisUtil;
 import cloudbox.file.ServiceImpl.FtpClientUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -12,10 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,17 +21,10 @@ import java.sql.Timestamp;
 public class test {
 
     @Resource(name = "TokenRedisTemplate")
-    RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
     private FileManagement fileManagement;
-
-    @Autowired
-    private FTP ftp;
-
-    @Autowired
-    private FtpClientUtil ftpClientUtil;
-
 
 
     @PostMapping(value = "test")
@@ -43,9 +32,17 @@ public class test {
     @CrossOrigin(origins = "http://localhost:3000")
     Object test(@RequestParam MultipartFile file) throws IOException {
 
+
+        Timestamp t = new Timestamp(232323);
+
+
+
+
+
         if(file != null){
 
-            ftpClientUtil.uploadFile(file,"/","jianli.pdf");
+            fileManagement.createFile("test","controller_4@test.com",255,"doc",t,0,file);
+
 
 
 
@@ -64,11 +61,25 @@ public class test {
     }
 
 
+    @Autowired
+    private FtpClientUtil ftpClientUtil;
+
     @GetMapping("/download/{fileName}")
     @CrossOrigin(origins = "http://localhost:3000")
     public void downloadFile(@PathVariable String fileName, HttpServletResponse response) throws IOException {
 
-        ftpClientUtil.downloadFileFromFTP(fileName,"/home/data/ftptest",response);
+        System.out.println(fileName);
+
+//        ftpClientUtil.downloadFileFromFTP(fileName,"/home/data/ftptest",response);
+
+//        ftpClientUtil.downloadFile("controller_4@test.comtest","controller_4@test.com/","233",response);
+
+        fileManagement.downloadFile("test","controller_4@test.com",response);
+
+
+
+
+//        fileManagement.downloadFile("test","controller_4@test.com",response);
     }
 
 
