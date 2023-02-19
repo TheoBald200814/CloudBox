@@ -1,0 +1,56 @@
+.background{
+    background-image: url("../Assets/background.png"),url("../Assets/main.PNG");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center top, center bottom;
+    overflow-y: scroll;
+    height: 300vh;
+    width: 100vw;
+}
+
+.bold_smooth_text {
+    font-family: Arial, sans-serif; /* 字体设置 */
+    font-weight: 900; /* 粗体 */
+    -webkit-font-smoothing: antialiased; /* 字体光滑 */
+    -moz-osx-font-smoothing: grayscale; /* 字体光滑 */
+    font-size: xxx-large;
+    color:white;
+}
+
+.navigate_button{
+    color: white;
+    font-weight: 900;
+    font-size: large;
+}
+
+.test {
+    display: flex; /* or display: grid; */
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.navigate_bar {
+    backdrop-filter: blur(10px);
+    width: 100vw;
+    height:10vh ;
+}
+
+.detail_empty{
+    margin-left: 3vw;
+    width: 46vw;
+    border-radius: 10px;
+}
+
+.detail_left{
+    margin-left: 3vw;
+    width: 46vw;
+    background: rgba(9, 32, 69, 0.8);
+    border-radius: 10px;
+}
+
+.detail_right{
+    margin-right: 3vw;
+    width: 46vw;
+    background: rgba(9, 32, 69, 0.8);
+    border-radius: 10px;
+}

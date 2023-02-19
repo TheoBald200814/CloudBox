@@ -1,0 +1,32 @@
+.cloud_box_background{
+    background-image: url("../../Assets/main.PNG");
+    background-size: contain;
+}
+
+.main_container{
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.bold_smooth_text {
+    font-family: Arial, sans-serif; /* 字体设置 */
+    font-weight: 900; /* 粗体 */
+    -webkit-font-smoothing: antialiased; /* 字体光滑 */
+    -moz-osx-font-smoothing: grayscale; /* 字体光滑 */
+    font-size: xxx-large;
+    color:white;
+}
+
+.volum{
+    font-size: large;
+    font-weight: 900;
+    color: white;
+    text-align:center;
+}
+
+.navigate_bar {
+    backdrop-filter: blur(10px);
+    width: 100vw;
+    height:10vh ;
+}

@@ -1,17 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+
 import reportWebVitals from './reportWebVitals';
-import {Button} from "@mui/material";
-import UploadFile from "./UploadFile";
-import DownloadFile from "./DownloadFile";
+import MainPage from "./Main/Main";
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-      <Button variant="contained">Contained</Button>
-      <DownloadFile/>
+
   </React.StrictMode>
 );
 
