@@ -3,6 +3,7 @@ import axios from 'axios';
 import './ComponentCSS/SignInAndSignUp.css'
 
 
+
 /**
  * 注册登陆组件
  * @author TheoBald
@@ -44,6 +45,12 @@ export default class SignInAndSignUp extends React.Component {
         const { userId,password_1 } = this.state;
         axios.post("http://localhost:8081/tempLogin", {accountId: userId,password:password_1}).then((response) => {
             console.log(response.data);
+            if(response.data != ""){
+                // <NavLink to="/CloudBox">CloudBox</NavLink>
+                // history.push('/CloudBox');
+                window.location.assign('/CloudBox'+'?token='+response.data);
+
+            }
         });
         // alert('用户名:' + this.state.userId + '密码:' + this.state.password_1);
         event.preventDefault();

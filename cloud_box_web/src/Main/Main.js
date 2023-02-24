@@ -6,6 +6,8 @@ import Paper from "@mui/material/Paper";
 import Main from './Main.css'
 import {NavigationBar} from "../Component/NavigationBar";
 import SignInAndSignUp from "../Component/SignInAndSignUp";
+import CloudBoxx from "../Home/CloudBox/CloudBox";
+import {NavLink, Route, Switch,useHistory} from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({//测试脚手架
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -22,6 +24,13 @@ const Item = styled(Paper)(({ theme }) => ({//测试脚手架
  * @constructor
  */
 export default function MainPage() {
+
+    const history = useHistory();
+
+    // function handleClick() {
+    //     // 执行跳转操作
+    //     history.push('/CloudBox');
+    // }
     return (
         <body className="background">
         <Box sx={{ height:'200vh',width:'100vw'}}>
@@ -40,6 +49,17 @@ export default function MainPage() {
                         <Item>test</Item>
                         <text style={{fontSize:'1000%',color:'white',fontWeight: 900}}>
                             Welcome
+                            {/*<div>*/}
+                            {/*    <button onClick={handleClick}>跳转到目标页面</button>*/}
+                            {/*</div>*/}
+
+                            2333333
+                            <NavLink to="/CloudBox">CloudBox</NavLink>
+
+
+
+
+
                         </text>
                     </Box>
                 </Grid>

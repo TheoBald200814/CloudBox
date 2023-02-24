@@ -23,6 +23,7 @@ import StarBorder from '@mui/icons-material/StarBorder';
 import Grid from "@mui/material/Unstable_Grid2";
 import {styled} from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
+import {useLocation, useParams} from "react-router-dom";
 
 
 function a11yProps(index) {
@@ -49,6 +50,9 @@ const Item = styled(Paper)(({ theme }) => ({
  * @constructor
  */
 export default function VerticalTabs(props) {
+
+    const searchParams = new URLSearchParams(useLocation().search);
+    const token = searchParams.get('token');
 
     const [open, setOpen] = React.useState(true);
     const handleClick = () => {
@@ -86,7 +90,7 @@ export default function VerticalTabs(props) {
                                 color:"#ffffff",
                                 fontSize:"100%"
                             }}>
-                                {props.accountId}
+                                {token}
                             </ListSubheader>
                         }>
                         <ListItemButton sx={{
