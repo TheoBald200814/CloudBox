@@ -8,6 +8,7 @@ import CloudBoxx from "./Home/CloudBox/CloudBox";
 import {BrowserRouter, NavLink, Route, Switch} from "react-router-dom";
 import Empty from "./Empty";
 import SignInAndSignUp from "./Component/SignInAndSignUp";
+import Appp from "./Empty";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -25,13 +26,12 @@ root.render(
 
         <Switch>
             <Route path="/MainPage" component={MainPage} />
-            <Route path="/CloudBox" component={CloudBoxx}/>
+            <Route path="/Home" component={CloudBoxx}/>
         </Switch>
 
-
-
-
     </BrowserRouter>
+    // <Appp />
+
 
 
 

@@ -23,7 +23,12 @@ import StarBorder from '@mui/icons-material/StarBorder';
 import Grid from "@mui/material/Unstable_Grid2";
 import {styled} from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
-import {useLocation, useParams} from "react-router-dom";
+import {Route, Switch, useLocation, useParams} from "react-router-dom";
+import MainPage from "../Main/Main";
+import CloudBoxx from "../Home/CloudBox/CloudBox";
+import SignInAndSignUp from "./SignInAndSignUp";
+import HomePage from "../Home/HomePage";
+import Appp from "../Empty";
 
 
 function a11yProps(index) {
@@ -43,6 +48,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 
+
 /**
  * CloudBox右侧导航栏
  * @param props 传入参数
@@ -52,12 +58,30 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function VerticalTabs(props) {
 
     const searchParams = new URLSearchParams(useLocation().search);
+    //获取url携带参数
     const token = searchParams.get('token');
+    //账户令牌
+    const id = searchParams.get('id');
+    //账户Id
+    const nickname = searchParams.get('nickname');
+    //账户昵称
+    const authority = searchParams.get('authority');
+    //账户权限
+    const empty = searchParams.get('empty');
+    //账户容量
 
     const [open, setOpen] = React.useState(true);
+
     const handleClick = () => {
         setOpen(!open);
     };
+
+    const [componentToShow, setComponentToShow] = React.useState('component1');
+
+    const handleClickPage = (component) => {
+        setComponentToShow(component);
+    }
+
     return (
         <Box
             sx={{
@@ -95,7 +119,7 @@ export default function VerticalTabs(props) {
                         }>
                         <ListItemButton sx={{
                             borderRadius: '20px'
-                        }}>
+                        }} onClick={() => handleClickPage('1')}>
                             <ListItemIcon>
                                 <SendIcon />
                             </ListItemIcon>
@@ -103,7 +127,7 @@ export default function VerticalTabs(props) {
                         </ListItemButton>
                         <ListItemButton sx={{
                             borderRadius: '20px'
-                        }}>
+                        }} onClick={() => handleClickPage('2')}>
                             <ListItemIcon>
                                 <DraftsIcon />
                             </ListItemIcon>
@@ -120,7 +144,7 @@ export default function VerticalTabs(props) {
                         </ListItemButton>
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <List component="div" disablePadding>
-                                <ListItemButton sx={{ pl: 4 }}>
+                                <ListItemButton sx={{ pl: 4 }} onClick={() => handleClickPage('3')}>
                                     <ListItemIcon>
                                         <StarBorder />
                                     </ListItemIcon>
@@ -147,8 +171,10 @@ export default function VerticalTabs(props) {
                             },
                         }}
                     >
+                        <HomePage  pageNum = {componentToShow}/>
 
                     </Box>
+
 
                 </Grid>
 
@@ -156,63 +182,9 @@ export default function VerticalTabs(props) {
             </Grid>
 
 
-            {/*<Tabs*/}
-            {/*    orientation="vertical"*/}
-            {/*    variant="scrollable"*/}
-            {/*    value={value}*/}
-            {/*    onChange={handleChange}*/}
-            {/*    aria-label="Vertical tabs example"*/}
-            {/*    sx={{ borderRight: 1, borderColor: 'divider',background:'#092045' }}*/}
-            {/*>*/}
-            {/*    <Tab label="&nbsp;&nbsp;&nbsp;&nbsp;Box" {...a11yProps(0)} icon={<Cloud />} style={{*/}
-            {/*        color: 'white',*/}
-            {/*        fontWeight: 'bold',*/}
-            {/*        fontSize:'20px',*/}
-            {/*        height:'15vh',*/}
-            {/*        width:'10vw',*/}
-            {/*        display: "flex",*/}
-            {/*        flexDirection: "row",*/}
-            {/*        alignItems: "center",*/}
-            {/*        justifyContent: "center",*/}
-            {/*    }} />*/}
-            {/*    <Tab label="&nbsp;Share" {...a11yProps(1)} icon={<Share />} style={{*/}
-            {/*        color: 'white',*/}
-            {/*        fontWeight: 'bold',*/}
-            {/*        fontSize:'20px',*/}
-            {/*        height:'15vh',*/}
-            {/*        width:'10vw',*/}
-            {/*        display: "flex",*/}
-            {/*        flexDirection: "row",*/}
-            {/*        alignItems: "center",*/}
-            {/*        justifyContent: "center"*/}
-            {/*    }} />*/}
-            {/*    <Tab label="&nbsp;&nbsp;&nbsp;&nbsp;Me" {...a11yProps(2)} icon={<Home />} style={{*/}
-            {/*        color: 'white',*/}
-            {/*        fontWeight: 'bold',*/}
-            {/*        fontSize:'20px',*/}
-            {/*        height:'15vh',*/}
-            {/*        width:'10vw' ,*/}
-            {/*        display: "flex",*/}
-            {/*        flexDirection: "row",*/}
-            {/*        alignItems: "center",*/}
-            {/*        justifyContent: "center"*/}
-            {/*    }}/>*/}
-            {/*    <div className="volum">*/}
-            {/*        space*/}
-            {/*    </div>*/}
-            {/*</Tabs>*/}
-            {/*<TabPanel value={value} index={0}>*/}
-            {/*    存储空间*/}
-            {/*</TabPanel>*/}
-            {/*<TabPanel value={value} index={1}>*/}
-            {/*    文件共享*/}
-            {/*</TabPanel>*/}
-            {/*<TabPanel value={value} index={2}>*/}
-            {/*    我的*/}
-            {/*</TabPanel>*/}
-
-
 
         </Box>
     );
 }
+
+

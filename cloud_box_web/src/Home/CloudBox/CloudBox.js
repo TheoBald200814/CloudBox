@@ -34,7 +34,7 @@ export default function CloudBoxx() {//Box框架
                 </Grid>
 
                 <Grid xs={12} md={12}>
-                    <Item>xs=6 md=8</Item>
+                    <Item>版本信息</Item>
                 </Grid>
             </Grid>
         </Box>

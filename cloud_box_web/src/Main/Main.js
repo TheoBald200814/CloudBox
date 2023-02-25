@@ -49,16 +49,6 @@ export default function MainPage() {
                         <Item>test</Item>
                         <text style={{fontSize:'1000%',color:'white',fontWeight: 900}}>
                             Welcome
-                            {/*<div>*/}
-                            {/*    <button onClick={handleClick}>跳转到目标页面</button>*/}
-                            {/*</div>*/}
-
-                            2333333
-                            <NavLink to="/CloudBox">CloudBox</NavLink>
-
-
-
-
 
                         </text>
                     </Box>

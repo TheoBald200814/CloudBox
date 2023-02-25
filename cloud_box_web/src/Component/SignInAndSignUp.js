@@ -18,7 +18,7 @@ export default class SignInAndSignUp extends React.Component {
             password_2:'',
             login: true
         };
-
+        //参数绑定
         this.handleChangeId = this.handleChangeId.bind(this);
         this.handleChangePassword_1 = this.handleChangePassword_1.bind(this);
         this.handleChangePassword_2 = this.handleChangePassword_2.bind(this);
@@ -27,49 +27,100 @@ export default class SignInAndSignUp extends React.Component {
         this.handleChangeMode=this.handleChangeMode.bind(this);
     }
 
-
+    //账户Id设置
     handleChangeId(event) {
         this.setState({userId: event.target.value});
     }
-
+    //账户密码设置
     handleChangePassword_1(event) {
         this.setState({password_1: event.target.value});
     }
-
+    //账户核验密码设置
     handleChangePassword_2(event) {
         this.setState({password_2: event.target.value});
     }
 
+    /**
+     * 登陆触发器
+     * @param event
+     */
     handleSubmitLogin(event) {
-
         const { userId,password_1 } = this.state;
-        axios.post("http://localhost:8081/tempLogin", {accountId: userId,password:password_1}).then((response) => {
-            console.log(response.data);
-            if(response.data != ""){
-                // <NavLink to="/CloudBox">CloudBox</NavLink>
-                // history.push('/CloudBox');
-                window.location.assign('/CloudBox'+'?token='+response.data);
+        //账户Id和密码
+        if(userId == '') {
+            //若userId为空
+            alert("请输入账户ID");
+        }else {
+            if(password_1 == ''){
+                //若密码为空
+                alert("请输入密码");
+            }else {
+                //若输入均符合要求
+                axios.post("http://localhost:8081/tempLogin", {accountId: userId,password:password_1}).then((response) => {
+                    //建立连接，核验身份
+                    if(response.data.res === "success"){
+                        //若身份认证成功
+                        window.location.assign(
+                            '/Home'+
+                            '?userId='+ userId +
+                            '&token=' + response.data.token +
+                            '&nickname=' + response.data.nickname +
+                            '&authoriy=' + response.data.authoriy +
+                            '&empty=' + response.data.empty_
+                        );
+                        alert('登陆成功');
+                        //跳转Home，携带所需参数
+                    }else {
+                        //若身份认证失败
+                        alert('登陆失败');
+                    }
+                });
 
             }
-        });
-        // alert('用户名:' + this.state.userId + '密码:' + this.state.password_1);
-        event.preventDefault();
-    }
-
-    handleSubmitRegister(event) {
-
-        const { userId,password_1,password_2 } = this.state;
-        if(password_1 === password_2){
-            //如果密码一致
-            axios.post("http://localhost:8081/createAccount", {accountId: userId,password:password_1}).then((response) => {
-                console.log(response.data);
-            });
-        }else {
-            alert("两次输入密码不一致，请重新输入");
         }
         event.preventDefault();
     }
 
+    /**
+     * 注册触发器
+     * @param event
+     */
+    handleSubmitRegister(event) {
+        const { userId,password_1,password_2 } = this.state;
+        //账户Id、密码、核验密码
+        if(userId == ''){
+            //若账户Id为空
+            alert("请输入账户ID");
+        }else {
+            if(password_1 == '' || password_2 == ''){
+                //若账户密码或核对密码为空
+                alert("请输入密码");
+            }else {
+                if(password_1 === password_2){
+                    //若输入均符合要求
+                    axios.post("http://localhost:8081/createAccount", {accountId: userId,password:password_1}).then((response) => {
+                        //建立连接，注册账户
+                        if(response.data.res === 'success'){
+                            //若注册成功
+                            alert("账户注册成功");
+                        }else {
+                            //若注册失败
+                            alert("账户注册失败");
+                        }
+                    });
+                }else {
+                    alert("两次输入密码不一致，请重新输入");
+                }
+
+            }
+        }
+        event.preventDefault();
+    }
+
+    /**
+     * 账户（注册-登陆切换）触发器
+     * @param event
+     */
     handleChangeMode(event){
         this.setState({
             login:!this.state.login,
