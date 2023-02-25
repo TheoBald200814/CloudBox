@@ -3,11 +3,9 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
-import PropTypes from 'prop-types';
-import Typography from '@mui/material/Typography';
-import BoxTopTabs from "../../Component/BoxTopTabs";
-import CloudBox from './CloudBox.css'
-import VerticalTabs from "../../Component/VerticalTabs";
+import BoxTopTabs from "../Component/BoxTopTabs";
+import VerticalTabs from "../Component/VerticalTabs";
+import Homecss from "./Home.css";
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -18,7 +16,12 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 //======================================================================================
-export default function CloudBoxx() {//Box框架
+/**
+ * Home界面
+ * @returns {JSX.Element}
+ * @constructor
+ */
+export default function Home() {
 
     return (
         <body className="cloud_box_background">
@@ -43,5 +46,4 @@ export default function CloudBoxx() {//Box框架
     );
 }
 //======================================================================================
-
 

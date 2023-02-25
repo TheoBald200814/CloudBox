@@ -1,12 +1,5 @@
 import * as React from 'react';
 import Box from "@mui/material/Box";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Cloud from "@mui/icons-material/Cloud";
-import Share from "@mui/icons-material/Share";
-import Home from "@mui/icons-material/Home";
-import TabPanel from "./TabPanel";
-import VerticalTabscss from './ComponentCSS/VerticalTabscss.css'
 
 import ListSubheader from '@mui/material/ListSubheader';
 import List from '@mui/material/List';
@@ -24,11 +17,6 @@ import Grid from "@mui/material/Unstable_Grid2";
 import {styled} from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import {Route, Switch, useLocation, useParams} from "react-router-dom";
-import MainPage from "../Main/Main";
-import CloudBoxx from "../Home/CloudBox/CloudBox";
-import SignInAndSignUp from "./SignInAndSignUp";
-import HomePage from "../Home/HomePage";
-import Appp from "../Empty";
 
 
 function a11yProps(index) {
@@ -171,7 +159,7 @@ export default function VerticalTabs(props) {
                             },
                         }}
                     >
-                        <HomePage  pageNum = {componentToShow}/>
+                        <ChildPage pageNum = {componentToShow}/>
 
                     </Box>
 
@@ -185,6 +173,70 @@ export default function VerticalTabs(props) {
 
         </Box>
     );
+}
+
+class ChildPage extends React.Component{
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            pageNum : props.pageNum,
+            token:233
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.pageNum !== this.props.pageNum) {
+            this.changePage(nextProps.pageNum)
+        }
+    }
+
+    //函数里可以包含ajax请求等复杂的逻辑
+    changePage(myArgument) {
+        this.setState({
+            pageNum: myArgument
+        })
+        this.changeTokenTest();
+        console.log(this.state.pageNum);
+    }
+
+    changeTokenTest(){
+        const {temp} = this.state;
+        this.setState({
+            token:temp +1
+        })
+    }
+
+    render() {
+        switch (this.state.pageNum){
+            case '1':
+                return (
+                    <div>
+                        PAGE1
+                        {this.state.token}
+                    </div>
+                );
+                break;
+            case '2':
+                return (
+                    <div>
+                        PAGE2
+                        {this.state.token}
+                    </div>
+
+                );
+                break;
+            case '3':
+                return (
+                    <div>
+                        PAGE3
+                        {this.state.token}
+                    </div>
+                );
+                break;
+        }
+    }
+
 }
 
 

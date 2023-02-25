@@ -4,36 +4,25 @@ import './index.css';
 
 import reportWebVitals from './reportWebVitals';
 import MainPage from "./Main/Main";
-import CloudBoxx from "./Home/CloudBox/CloudBox";
 import {BrowserRouter, NavLink, Route, Switch} from "react-router-dom";
-import Empty from "./Empty";
-import SignInAndSignUp from "./Component/SignInAndSignUp";
-import Appp from "./Empty";
+import Home from "./Home/Home";
+import UploadFile from "./Home/CloudBox/UploadFile";
+import FileList from "./Home/CloudBox/FileList";
+import DataTable from "./TestList";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  // <React.StrictMode>
-  //
-  //
-  //   <Router>
-  //     <Route path="/" component={MainPage} />
-  //   </Router>
-  //
-  // </React.StrictMode>
 
 
-    <BrowserRouter>
-
-        <Switch>
-            <Route path="/MainPage" component={MainPage} />
-            <Route path="/Home" component={CloudBoxx}/>
-        </Switch>
-
-    </BrowserRouter>
-    // <Appp />
-
-
-
+    // <BrowserRouter>
+    //
+    //     <Switch>
+    //         <Route path="/MainPage" component={MainPage} />
+    //         <Route path="/Home" component={Home}/>
+    //     </Switch>
+    //
+    // </BrowserRouter>
+    <FileList />
 
 
 );
