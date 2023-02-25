@@ -5,6 +5,11 @@ import UploadFile from "./UploadFile";
 import axios from "axios";
 import {DataGrid} from "@mui/x-data-grid";
 import {Button, Input} from "@mui/material";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
+import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined';
+import ShareIcon from '@mui/icons-material/Share';
 
 
 /**
@@ -28,6 +33,7 @@ export default class FileList extends React.Component{
         this.updateFileList();
 
     }
+
     /**
      * 文件更新函数
      * @param event
@@ -40,23 +46,30 @@ export default class FileList extends React.Component{
             fileName:files.name
         });
     };
+
     /**
      * 文件上传函数
      */
     handleFileUpload = () => {
         const {token, fileName} = this.state;
         const formData = new FormData();
-        formData.append("file", this.state.file);
-        axios.post("http://localhost:8082/createFile?token=" + token + "&fileName=" + fileName, formData).then((response) => {
-            console.log(response.data);
-            if(response.data.res === 'success'){
-                alert("文件上传成功");
-                this.updateFileList();
-            }else {
-                alert("文件上传失败");
-            }
-        });
+        if(this.state.file != null){
+            formData.append("file", this.state.file);
+            axios.post("http://localhost:8082/createFile?token=" + token + "&fileName=" + fileName, formData).then((response) => {
+                console.log(response.data);
+                if(response.data.res === 'success'){
+                    alert("文件上传成功");
+                    this.updateFileList();
+                }else {
+                    alert("文件上传失败");
+                }
+            });
+        }else {
+            alert("请选择文件");
+        }
+
     };
+
     /**
      * 个人文件列表加载函数
      */
@@ -71,18 +84,85 @@ export default class FileList extends React.Component{
             this.setState({
                 rows:response.data
             })
-
         });
+    }
 
+    /**
+     * 文件删除触发器
+     * @param id
+     */
+    handleButtonDelete(id) {
+        // console.log(`Button clicked for row with id ${id}`);
+        alert(id + "Delete");
+    }
+
+    /**
+     * 文件修改触发器
+     * @param id
+     */
+    handleButtonChange(id) {
+        // console.log(`Button clicked for row with id ${id}`);
+        alert(id + "Change");
+    }
+
+    /**
+     * 文件下载触发器
+     * @param id
+     */
+    handleButtonDownload(id) {
+        // console.log(`Button clicked for row with id ${id}`);
+        alert(id + "Download");
     }
 
     render() {
         const columns = [
-            { field: 'fileName', headerName: 'Name', width: 500 },
-            { field: 'fileSize', headerName: 'Size', width: 200, type: 'number' },
-            { field: 'fileType', headerName: 'Type', width: 130 },
-            { field: 'fileDate', headerName: 'Date', width: 300, type: 'date'},
+            { field: 'fileName', headerName: 'Name', width: 400 },
+            { field: 'fileSize', headerName: 'Size', width: 100, type: 'number' },
+            { field: 'fileType', headerName: 'Type', width: 100 },
+            { field: 'fileDate', headerName: 'Date', width: 200, type: 'date'},
             { field: 'downloadCount', headerName: 'DownloadCount', width: 160 },
+            {
+                field: 'change',
+                headerName: 'Change',
+                width: 80,
+                renderCell: (params) => (
+                    <Button variant="outlined" color="primary" sx = {{ borderRadius:'8px' }} onClick={() => this.handleButtonChange(params.id)}>
+                        <CreateOutlinedIcon />
+                    </Button>
+                ),
+            },
+            {
+                field: 'download',
+                headerName: 'Download',
+                width: 80,
+                renderCell: (params) => (
+                    <Button variant="outlined" color="primary" sx = {{ borderRadius:'8px' }} onClick={() => this.handleButtonDownload(params.id)}>
+                        <CloudDownloadOutlinedIcon />
+                    </Button>
+                ),
+            },
+            {
+                field: 'share',
+                headerName: 'Share',
+                width: 80,
+                renderCell: (params) => (
+                    <Button variant="outlined" color="primary" sx = {{ borderRadius:'8px' }} onClick={() => this.handleButtonShare(params.id)}>
+                        <ShareIcon />
+                    </Button>
+                ),
+            },
+            {
+                field: 'delete',
+                headerName: 'Delete',
+                width: 80,
+                renderCell: (params) => (
+                    <Button variant="contained" color="error" sx = {{ borderRadius:'8px' }} onClick={() => this.handleButtonDelete(params.id)}>
+                        <DeleteOutlineIcon />
+                    </Button>
+                ),
+            }
+
+
         ];
         const getRowId = (row) => row.fileName;
 
@@ -99,8 +179,8 @@ export default class FileList extends React.Component{
                     alignItems: "center",
                     padding:'2vh'
                 }}>
-                    <Button variant="contained" color="primary" onClick={this.handleFileUpload}>
-                        上传
+                    <Button variant="contained" color="primary" sx = {{ borderRadius:'8px' }} onClick={this.handleFileUpload}>
+                        <CloudUploadOutlinedIcon />
                     </Button>
                 </Grid>
 
@@ -113,7 +193,7 @@ export default class FileList extends React.Component{
                               rowsPerPageOptions={[5]}
                               checkboxSelection
                               sx={{
-                                  height:'100vh',
+                                  height:'50vh',
                                   width:'100vw'
                               }}
                     />
