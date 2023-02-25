@@ -35,7 +35,7 @@ public class FileController {
      */
     @PostMapping(value = "createFile")
     @ResponseBody
-    @CrossOrigin
+    @CrossOrigin(origins = "http://localhost:3000")
     Object createFile(@RequestParam String token, @RequestParam String fileName, @RequestParam MultipartFile file) throws IOException {
 
         Map<String,String> account = tokenRedisUtil.tokenCheck(token);
@@ -44,15 +44,15 @@ public class FileController {
         //响应结果
         if(account != null){
             //若查有此人
-            String fileId = account.get("account_id");
+            String fileId = account.get("accountId");
             //获取账户Id（文件Id）
             long fileSize = file.getSize();
             //获取文件大小
-            String fileType = fileName.split(".")[1];
+            String [] fileTypeAndName = fileName.split("\\.");
             //获取文件类型
             Timestamp nowTime = new Timestamp(System.currentTimeMillis());
             //获取当前系统时间戳
-            String url = fileManagement.createFile(fileName,fileId,fileSize,fileType,nowTime,0,file);
+            String url = fileManagement.createFile(fileTypeAndName[0],fileId,fileSize,fileTypeAndName[1],nowTime,0,file);
             //创建FCB，保存文件至分配空间，返回url
             if(url != null){
                 //如果创建成功
@@ -91,7 +91,7 @@ public class FileController {
         //响应结果
         if(account != null){
             //若查有此人
-            String fileId = account.get("account_id");
+            String fileId = account.get("accountId");
             //获取账户Id（文件Id）
             boolean judgeFileName = fileManagement.updateFileName(fileName,fileId,newFileName);
             //修改文件名
@@ -134,7 +134,7 @@ public class FileController {
         //响应结果
         if(account != null){
             //若查有此人
-            String fileId = account.get("account_id");
+            String fileId = account.get("accountId");
             //获取账户Id（文件Id）
             boolean judgeFileType = fileManagement.updateFileType(fileName,fileId,newFileType);
             //修改文件名
@@ -173,7 +173,7 @@ public class FileController {
         //身份校验
         if(account != null){
             //若查有此人
-            String fileId = account.get("account_id");
+            String fileId = account.get("accountId");
             //获取账户Id（文件Id）
             fileManagement.downloadFile(fileName,fileId,response);
             //文件下载
@@ -199,7 +199,7 @@ public class FileController {
         //身份校验
         if(account != null){
             //若查有此人
-            String fileId = account.get("account_id");
+            String fileId = account.get("accountId");
             //获取账户Id（文件Id）
             return fileManagement.readFileList(fileId);
             //返回文件列表
@@ -231,7 +231,7 @@ public class FileController {
         //响应结果
         if(account != null){
             //若查有此人
-            String fileId = account.get("account_id");
+            String fileId = account.get("accountId");
             //获取账户Id（文件Id）
             boolean judge = fileManagement.deleteFCB(fileName,fileId);
             //删除FCB及文件
