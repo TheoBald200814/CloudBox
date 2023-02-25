@@ -59,7 +59,7 @@ public class RedisManagement {
         redisAccount.put("account_empty",String.valueOf(account.getAccountEmpty()));
         //集合插入账户云盘容量
         stringRedisTemplate.opsForHash().putAll(account.getId(),redisAccount);
-        stringRedisTemplate.opsForHash().getOperations().expire(account.getId(),60,TimeUnit.SECONDS);
+        stringRedisTemplate.opsForHash().getOperations().expire(account.getId(),600,TimeUnit.SECONDS);
         //录入缓存（key：accountId，value：HashMap）
 
 
@@ -89,7 +89,7 @@ public class RedisManagement {
             return null;
         }else{
 
-            stringRedisTemplate.opsForHash().getOperations().expire(accountId,60,TimeUnit.SECONDS);
+            stringRedisTemplate.opsForHash().getOperations().expire(accountId,600,TimeUnit.SECONDS);
             //刷新该账户在缓存中的有效期
             Account result = new Account();
             //初始化账户对象
@@ -122,7 +122,7 @@ public class RedisManagement {
 
         stringRedisTemplate.opsForHash().put(accountId,hashKey,hashValue);
 
-        stringRedisTemplate.opsForHash().getOperations().expire(accountId,60,TimeUnit.SECONDS);
+        stringRedisTemplate.opsForHash().getOperations().expire(accountId,600,TimeUnit.SECONDS);
     }
 
 

@@ -5,6 +5,7 @@ import cloudbox.account.Service.AccountManagement;
 import cloudbox.account.Mapper.Mapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.fasterxml.jackson.datatype.jsr310.ser.YearSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,9 @@ public class AccountManagementImpl implements AccountManagement {
 
     @Autowired
     private AccountRedisUtil accountRedisUtil;
+
+    @Autowired
+    private TokenRedisUtil tokenRedisUtil;
 
 
     /**
@@ -562,5 +566,43 @@ public class AccountManagementImpl implements AccountManagement {
         String data=password+"aa7aa8a8fa604c60866413f52563b70c";
         return DigestUtils.md5DigestAsHex(data.getBytes());
     }
+
+    /**
+     * 账户登陆（测试用）
+     * @param accountId 账户Id
+     * @param password 账户密码
+     * @return 若登陆成功，返回账户token；若登陆失败，返回null
+     */
+    @Override
+    public String tempLogin(@NotBlank @Size(min=10,max=30) @Email String accountId,
+                     @NotBlank @Size(min=10,max=32) String password) throws IOException, SQLException {
+
+        Account account = readAccount(accountId);
+
+        if(account != null){
+            //若账户存在
+            String passwordByMD5 = encryptPasswordByDM5(password);
+            //密码使用MD5加密
+            if(account.getPassword().equals(passwordByMD5)){
+                //若密码正确
+                String token = encryptPasswordByDM5(password);
+
+                tokenRedisUtil.tempPutToken(token,accountId,"0");
+                return token;
+            }else {
+                //若密码错误
+                System.out.println("密码错误，登陆失败");
+                return null;
+            }
+        }else {
+            //若账户不存在
+            System.out.println("账户不存在");
+            return null;
+        }
+    }
+
+
+
+
 
 }

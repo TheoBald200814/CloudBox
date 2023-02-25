@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * 基础账户控制类
  * @author TheoBald
- * @version 0.0.1
+ * @version 0.0.2
  */
 @RestController
 public class BasicAccountController {
@@ -35,36 +35,33 @@ public class BasicAccountController {
         System.out.println("Service层数据格式校验未通过");
     }
 
+
     /**
      * 账户创建控制器
-     * @param id 账户id
-     * @param password 账户密码
-     * @param nickname 账户昵称
-     * @param photo 账户头像
+     * @param box 注册账户数据箱（包含账户id、账户密码、账户昵称（选））
      * @return 成功返回sucess；失败返回failure
      */
     @PostMapping(value = "createAccount")
     @ResponseBody
-    Object createAccount(@RequestParam String id, @RequestParam String password, String nickname, MultipartFile photo) throws IOException, SQLException {
+    @CrossOrigin(value = "http://localhost:3000")
+    Object createAccount(@RequestBody Map<String,String> box) throws IOException, SQLException {
 
         Map<String,String> result = new HashMap<>();
-
-        Blob imageBlob = null;
-
-        if(photo != null){
-
-            byte [] image = photo.getBytes();
-
-            imageBlob = new SerialBlob(image);
-
-        }
-        boolean judge = accountManagement.createAccount(id,password,nickname,imageBlob);
-
+        //反馈结果
+        String id = box.get("accountId");
+        //拆箱账户Id
+        String password = box.get("password");
+        //拆箱账户密码
+        String nickname = box.get("nickname");
+        //拆箱账户昵称（如果有）
+        boolean judge = accountManagement.createAccount(id,password,nickname,null);
+        //账户注册
         if(judge){
-
+            //若注册成功
             result.put("res","success");
             return result;
         }
+        //若注册失败
         result.put("res","failure");
         return result;
     }
@@ -77,6 +74,7 @@ public class BasicAccountController {
      */
     @PostMapping(value = "logoutAccount")
     @ResponseBody
+    @CrossOrigin(value = "http://localhost:3000")
     Object logoutAccount(@RequestParam String token){
 
         Map<String,String> result = new HashMap<>();
@@ -96,6 +94,7 @@ public class BasicAccountController {
      */
     @PostMapping(value = "deleteAccount")
     @ResponseBody
+    @CrossOrigin(value = "http://localhost:3000")
     Object deleteAccount(@RequestParam String token){
 
         Map<String,String> result = new HashMap<>();
@@ -124,6 +123,7 @@ public class BasicAccountController {
      */
     @PostMapping(value = "updatePassword")
     @ResponseBody
+    @CrossOrigin(value = "http://localhost:3000")
     Object updatePassword(@RequestParam String token, @RequestParam String password){
 
         Map<String,String> result = new HashMap<>();
@@ -152,6 +152,7 @@ public class BasicAccountController {
      */
     @PostMapping(value = "updateNickname")
     @ResponseBody
+    @CrossOrigin(value = "http://localhost:3000")
     Object updateNickname(@RequestParam String token, @RequestParam String nickname){
 
         Map<String,String> result = new HashMap<>();
@@ -182,6 +183,7 @@ public class BasicAccountController {
      */
     @PostMapping(value = "updatePhoto")
     @ResponseBody
+    @CrossOrigin(value = "http://localhost:3000")
     Object updatePhoto(@RequestParam String token, @RequestParam MultipartFile photo) throws IOException, SQLException {
 
         Map<String,String> result = new HashMap<>();
@@ -203,6 +205,31 @@ public class BasicAccountController {
         }
         result.put("res","failure");
         return result;
+    }
+
+
+
+    @PostMapping(value = "tempLogin")
+    @ResponseBody
+    @CrossOrigin(value = "http://localhost:3000")
+    Object tempLogin(@RequestBody Map<String,String> result) throws IOException, SQLException {
+
+        System.out.println(result);
+        String accountId = result.get("accountId");
+        String passowrd = result.get("password");
+
+        Map<String,String> temp =new HashMap<>();
+        temp.put("res","success");
+        temp.put("token",accountManagement.tempLogin(result.get("accountId"),result.get("password")));
+
+        System.out.println(accountManagement.tempLogin(result.get("accountId"),result.get("password")));
+
+
+
+        return temp;
+
+//        return accountManagement.createAccount(accountId,passowrd,"nick",null);
+
     }
 
 }

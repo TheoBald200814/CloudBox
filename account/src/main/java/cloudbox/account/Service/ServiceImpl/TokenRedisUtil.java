@@ -3,6 +3,7 @@ package cloudbox.account.Service.ServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Validated
 @Component
+@Service
 public class TokenRedisUtil {
 
     @Resource(name = "TokenRedisTemplate")
@@ -60,6 +62,16 @@ public class TokenRedisUtil {
 
         Object temp = redisTemplate.opsForHash().delete(token,"account_id","authority");
 
+    }
+
+
+    public void tempPutToken(@Size(max = 32,min = 32) String token, String accountId,String authority){
+
+        Map<String,String> result = new HashMap<>();
+        result.put("accountId",accountId);
+        result.put("authority",authority);
+
+        redisTemplate.opsForHash().putAll(token,result);
     }
 
 }

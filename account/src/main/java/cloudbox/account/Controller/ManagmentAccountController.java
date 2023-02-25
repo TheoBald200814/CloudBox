@@ -29,9 +29,6 @@ public class ManagmentAccountController {
     @Autowired
     private TokenRedisUtil tokenRedisUtil;
 
-    @Resource(name = "TokenRedisTemplate")
-    RedisTemplate<String, Object> redisTemplate;
-
     @ExceptionHandler(ConstraintViolationException.class)
     public void handleValidationExceptions(ConstraintViolationException ex) {
         System.out.println("Service层数据格式校验未通过");
