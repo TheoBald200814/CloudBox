@@ -75,15 +75,17 @@ public class FileController {
 
     /**
      * 更新文件名控制器
-     * @param token 账户令牌
-     * @param fileName 文件名
-     * @param newFileName 新文件名
+     * @param box 数据包
      * @return 若更新成功，返回success；若更新失败，返回failure
      */
     @PostMapping(value = "updateFileName")
     @ResponseBody
-    @CrossOrigin
-    Object updateFileName(@RequestParam String token, @RequestParam String fileName, @RequestParam String newFileName){
+    @CrossOrigin(origins = "http://localhost:3000")
+    Object updateFileName(@RequestBody Map<String,String> box){
+
+        String token = box.get("token");
+        String fileName = box.get("fileName");
+        String newFileName = box.get("newFileName");
 
         Map<String,String> account = tokenRedisUtil.tokenCheck(token);
         //身份校验
@@ -117,16 +119,18 @@ public class FileController {
 
     /**
      * 更新文件类型控制器
-     * @param token 账户令牌
-     * @param fileName 文件名
-     * @param newFileType 新文件类型
+     * @param box 数据包
      * @return 若更新成功，返回success；若更新失败，返回failure
      * @return
      */
     @PostMapping(value = "updateFileType")
     @ResponseBody
-    @CrossOrigin
-    Object updateFileType(@RequestParam String token, @RequestParam String fileName, @RequestParam String newFileType){
+    @CrossOrigin(origins = "http://localhost:3000")
+    Object updateFileType(@RequestBody Map<String,String> box){
+
+        String token = box.get("token");
+        String fileName = box.get("fileName");
+        String newFileType = box.get("newFileType");
 
         Map<String,String> account = tokenRedisUtil.tokenCheck(token);
         //身份校验

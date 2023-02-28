@@ -17,6 +17,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import {styled} from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import {Route, Switch, useLocation, useParams} from "react-router-dom";
+import FileList from "../Home/CloudBox/FileList";
 
 
 function a11yProps(index) {
@@ -136,7 +137,7 @@ export default function VerticalTabs(props) {
                                     <ListItemIcon>
                                         <StarBorder />
                                     </ListItemIcon>
-                                    <ListItemText primary="Starred" />
+                                    <ListItemText primary="List" />
                                 </ListItemButton>
                             </List>
                         </Collapse>
@@ -151,15 +152,11 @@ export default function VerticalTabs(props) {
                             marginTop:'0.5%',
                             width: '73vw',
                             height: '78vh',
-                            backgroundColor: 'primary.dark',
+                            backgroundColor: "rgba(133,133,133,0.56)",
                             borderRadius: '20px',
-                            '&:hover': {
-                                backgroundColor: 'primary.main',
-                                opacity: [0.9, 0.8, 0.7],
-                            },
                         }}
                     >
-                        <ChildPage pageNum = {componentToShow}/>
+                        <ChildPage pageNum = {componentToShow} token = {token}/>
 
                     </Box>
 
@@ -181,7 +178,7 @@ class ChildPage extends React.Component{
         super(props);
         this.state = {
             pageNum : props.pageNum,
-            token:233
+            token:''
         }
     }
 
@@ -229,8 +226,7 @@ class ChildPage extends React.Component{
             case '3':
                 return (
                     <div>
-                        PAGE3
-                        {this.state.token}
+                        <FileList token = {this.state.token} />
                     </div>
                 );
                 break;

@@ -10,7 +10,9 @@ import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined';
 import ShareIcon from '@mui/icons-material/Share';
-
+import AlertConfirm from 'react-alert-confirm';
+import SignInAndSignUp from "../../Component/SignInAndSignUp";
+import FileUpdate from "./ChildWindow/FileUpdate";
 
 /**
  * 文件管理界面
@@ -24,7 +26,10 @@ export default class FileList extends React.Component{
             file:null,
             fileName:'',
             fileList:'',
-            rows:[]
+            rows:[],
+            testPage:false,
+            visible:false
+
         }
         this.updateFileList = this.updateFileList.bind(this);
     }
@@ -91,7 +96,7 @@ export default class FileList extends React.Component{
      * 文件删除触发器
      * @param id
      */
-    handleButtonDelete(id) {
+    handleFileDelete(id) {
         // console.log(`Button clicked for row with id ${id}`);
         alert(id + "Delete");
     }
@@ -100,9 +105,30 @@ export default class FileList extends React.Component{
      * 文件修改触发器
      * @param id
      */
-    handleButtonChange(id) {
-        // console.log(`Button clicked for row with id ${id}`);
-        alert(id + "Change");
+    handleFileChange(id) {
+
+        this.setState({
+            testPage:true
+        })
+    }
+
+    handleFileUpdate = async (params) => {
+
+        const [action] = await AlertConfirm({
+            maskClosable: true,
+            custom: dispatch => (
+                // <div className="custom-popup">
+                //     <div>Custom popup</div>
+                //     <div style={{ marginTop: 10 }}>
+                //         <button onClick={() => dispatch(false)}>Close</button>
+                //     </div>
+                // </div>
+                <div>
+                    <FileUpdate token = {this.state.token} fileName = {params} />
+                </div>
+            )
+        });
+
     }
 
     /**
@@ -116,17 +142,17 @@ export default class FileList extends React.Component{
 
     render() {
         const columns = [
-            { field: 'fileName', headerName: 'Name', width: 400 },
-            { field: 'fileSize', headerName: 'Size', width: 100, type: 'number' },
-            { field: 'fileType', headerName: 'Type', width: 100 },
+            { field: 'fileName', headerName: 'Name', width: 250 },
+            { field: 'fileSize', headerName: 'Size', width: 80, type: 'number' },
+            { field: 'fileType', headerName: 'Type', width: 50 },
             { field: 'fileDate', headerName: 'Date', width: 200, type: 'date'},
-            { field: 'downloadCount', headerName: 'DownloadCount', width: 160 },
+            { field: 'downloadCount', headerName: 'Download', width: 100 },
             {
                 field: 'change',
                 headerName: 'Change',
                 width: 80,
                 renderCell: (params) => (
-                    <Button variant="outlined" color="primary" sx = {{ borderRadius:'8px' }} onClick={() => this.handleButtonChange(params.id)}>
+                    <Button variant="outlined" color="primary" sx = {{ borderRadius:'8px' }} onClick={() => this.handleFileUpdate(params.id)}>
                         <CreateOutlinedIcon />
                     </Button>
                 ),
@@ -136,7 +162,7 @@ export default class FileList extends React.Component{
                 headerName: 'Download',
                 width: 80,
                 renderCell: (params) => (
-                    <Button variant="outlined" color="primary" sx = {{ borderRadius:'8px' }} onClick={() => this.handleButtonDownload(params.id)}>
+                    <Button variant="outlined" color="primary" sx = {{ borderRadius:'8px' }} onClick={() => this.handleFileDownload(params.id)}>
                         <CloudDownloadOutlinedIcon />
                     </Button>
                 ),
@@ -146,7 +172,7 @@ export default class FileList extends React.Component{
                 headerName: 'Share',
                 width: 80,
                 renderCell: (params) => (
-                    <Button variant="outlined" color="primary" sx = {{ borderRadius:'8px' }} onClick={() => this.handleButtonShare(params.id)}>
+                    <Button variant="outlined" color="primary" sx = {{ borderRadius:'8px' }} onClick={() => this.handleFileShare(params.id)}>
                         <ShareIcon />
                     </Button>
                 ),
@@ -156,7 +182,7 @@ export default class FileList extends React.Component{
                 headerName: 'Delete',
                 width: 80,
                 renderCell: (params) => (
-                    <Button variant="contained" color="error" sx = {{ borderRadius:'8px' }} onClick={() => this.handleButtonDelete(params.id)}>
+                    <Button variant="contained" color="error" sx = {{ borderRadius:'8px' }} onClick={() => this.handleFileDelete(params.id)}>
                         <DeleteOutlineIcon />
                     </Button>
                 ),
@@ -167,44 +193,47 @@ export default class FileList extends React.Component{
         const getRowId = (row) => row.fileName;
 
         return (
-            <Grid container >
 
-                <Grid xs={12} md={12}>
-                    <Input type="file" onChange={this.handleFileChange} />
-                </Grid>
+        <Grid container >
 
-                <Grid xs={12} md={12} sx={{
-                    display:"flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding:'2vh'
-                }}>
-                    <Button variant="contained" color="primary" sx = {{ borderRadius:'8px' }} onClick={this.handleFileUpload}>
-                        <CloudUploadOutlinedIcon />
-                    </Button>
-                </Grid>
-
-                <Grid xs={12} md={12}>
-                    这里放文件列表
-                    <DataGrid columns={columns}
-                              rows={this.state.rows}
-                              getRowId={getRowId}
-                              pageSize={5}
-                              rowsPerPageOptions={[5]}
-                              checkboxSelection
-                              sx={{
-                                  height:'50vh',
-                                  width:'100vw'
-                              }}
-                    />
-                </Grid>
-
+            <Grid xs={12} md={12}>
+                <Input type="file" onChange={this.handleFileChange} />
             </Grid>
+
+            <Grid xs={12} md={12} sx={{
+                display:"flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding:'2vh'
+            }}>
+                <Button variant="contained" color="primary" sx = {{ borderRadius:'8px' }} onClick={this.handleFileUpload}>
+                    <CloudUploadOutlinedIcon />
+                </Button>
+            </Grid>
+
+            <Grid xs={12} md={12}>
+                这里放文件列表
+
+                <DataGrid columns={columns}
+                          rows={this.state.rows}
+                          getRowId={getRowId}
+                          pageSize={5}
+                          rowsPerPageOptions={[5]}
+                          checkboxSelection
+                          sx={{
+                              height:'60vh',
+                              width:'73vw'
+                          }}
+                />
+            </Grid>
+
+        </Grid>
+
+
 
         );
 
     }
-
 
 }
 

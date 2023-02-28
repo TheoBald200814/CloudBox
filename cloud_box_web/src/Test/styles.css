@@ -1,0 +1,52 @@
+.toast {
+    position: fixed;
+    width: 320px;
+    padding: 1em 1.5em;
+    margin-left: -160px;
+    border-radius: var(--radius);
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+}
+
+.cancel {
+    position: absolute;
+    top: .25em;
+    right: .25em;
+    color: #fff;
+    cursor: pointer;
+}
+
+.center {
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+}
+
+.top {
+    top: 80px;
+    left: 50%;
+}
+
+.right {
+    right: 20px;
+    top: 80px;
+    margin-left: 0;
+}
+
+.bottom {
+    bottom: 70px;
+    left: 50%;
+}
+
+.default {
+    background-color: color(#000 alpha(80%));
+}
+
+.success {
+    background-color: color(var(--success) alpha(90%));
+}
+
+.danger {
+    background-color: color(var(--failed) alpha(90%));
+}
