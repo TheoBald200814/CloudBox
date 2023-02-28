@@ -18,6 +18,7 @@ import {styled} from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import {Route, Switch, useLocation, useParams} from "react-router-dom";
 import FileList from "../Home/CloudBox/FileList";
+import Me from "../Home/Me/Me";
 
 
 function a11yProps(index) {
@@ -50,7 +51,7 @@ export default function VerticalTabs(props) {
     //获取url携带参数
     const token = searchParams.get('token');
     //账户令牌
-    const id = searchParams.get('id');
+    const userId = searchParams.get('userId');
     //账户Id
     const nickname = searchParams.get('nickname');
     //账户昵称
@@ -103,32 +104,53 @@ export default function VerticalTabs(props) {
                                 color:"#ffffff",
                                 fontSize:"100%"
                             }}>
-                                {token}
+                                {userId}
                             </ListSubheader>
                         }>
+
                         <ListItemButton sx={{
                             borderRadius: '20px'
                         }} onClick={() => handleClickPage('1')}>
                             <ListItemIcon>
                                 <SendIcon />
                             </ListItemIcon>
-                            <ListItemText primary="ME" />
+                            <ListItemText primary="个人管理" />
                         </ListItemButton>
+
+                        <ListItemButton sx={{
+                            borderRadius: '20px'
+                        }} onClick={() => handleClickPage('1')}>
+                            <ListItemIcon>
+                                <SendIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="账户管理" />
+                        </ListItemButton>
+
+                        <ListItemButton sx={{
+                            borderRadius: '20px'
+                        }} onClick={() => handleClickPage('1')}>
+                            <ListItemIcon>
+                                <SendIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="数据分析" />
+                        </ListItemButton>
+
                         <ListItemButton sx={{
                             borderRadius: '20px'
                         }} onClick={() => handleClickPage('2')}>
                             <ListItemIcon>
                                 <DraftsIcon />
                             </ListItemIcon>
-                            <ListItemText primary="SHARE" />
+                            <ListItemText primary="文件共享" />
                         </ListItemButton>
+
                         <ListItemButton onClick={handleClick} sx={{
                             borderRadius: '20px'
                         }}>
                             <ListItemIcon>
                                 <InboxIcon />
                             </ListItemIcon>
-                            <ListItemText primary="BOX" />
+                            <ListItemText primary="云盘空间" />
                             {open ? <ExpandLess /> : <ExpandMore />}
                         </ListItemButton>
                         <Collapse in={open} timeout="auto" unmountOnExit>
@@ -156,7 +178,13 @@ export default function VerticalTabs(props) {
                             borderRadius: '20px',
                         }}
                     >
-                        <ChildPage pageNum = {componentToShow} token = {token}/>
+                        <ChildPage pageNum = {componentToShow}
+                                   token = {token}
+                                   userId = {userId}
+                                   nickname = {nickname}
+                                   authority = {authority}
+                                   empty = {empty}
+                        />
 
                     </Box>
 
@@ -178,7 +206,11 @@ class ChildPage extends React.Component{
         super(props);
         this.state = {
             pageNum : props.pageNum,
-            token:''
+            token:props.token,
+            userId:props.userId,
+            nickname:props.nickname,
+            authority:props.authority,
+            empty:props.empty
         }
     }
 
@@ -193,24 +225,23 @@ class ChildPage extends React.Component{
         this.setState({
             pageNum: myArgument
         })
-        this.changeTokenTest();
         console.log(this.state.pageNum);
     }
 
-    changeTokenTest(){
-        const {temp} = this.state;
-        this.setState({
-            token:temp +1
-        })
-    }
 
     render() {
         switch (this.state.pageNum){
             case '1':
                 return (
                     <div>
-                        PAGE1
-                        {this.state.token}
+
+                        <Me token={this.state.token}
+                            accountId={this.state.userId}
+                            nickname={this.state.nickname}
+                            authority={this.state.authority}
+                            empty_={this.state.empty}
+                        />
+
                     </div>
                 );
                 break;

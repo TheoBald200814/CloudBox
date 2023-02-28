@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import BoxTopTabscss from './ComponentCSS/BoxTopTabscss.css'
+import axios from "axios";
 
 
 /**
@@ -13,13 +14,20 @@ import BoxTopTabscss from './ComponentCSS/BoxTopTabscss.css'
  * @returns {JSX.Element}
  * @constructor
  */
-export default function BoxTopTabs() {
+export default function BoxTopTabs(props) {
 
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const handleChangeLogout = () => {
+
+        window.location.assign(
+            '/MainPage'
+        );
+    }
 
     return (
         <Box className="navigate_bar" >
@@ -43,7 +51,7 @@ export default function BoxTopTabs() {
                         </Button>
                     </Grid>
                     <Grid>
-                        <Button variant="outlined" >
+                        <Button variant="outlined" onClick={handleChangeLogout}>
                             <LogoutOutlinedIcon/>
                         </Button>
                     </Grid>

@@ -60,7 +60,7 @@ public class TokenRedisUtil {
      */
     public void tokenDelete(@Size(max = 32,min = 32) String token){
 
-        Object temp = redisTemplate.opsForHash().delete(token,"account_id","authority");
+        Object temp = redisTemplate.opsForHash().delete(token,"accountId","authority");
 
     }
 

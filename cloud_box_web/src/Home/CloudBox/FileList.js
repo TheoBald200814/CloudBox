@@ -1,7 +1,6 @@
 import React from 'react';
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
-import UploadFile from "./UploadFile";
 import axios from "axios";
 import {DataGrid} from "@mui/x-data-grid";
 import {Button, Input} from "@mui/material";
@@ -11,7 +10,6 @@ import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined';
 import ShareIcon from '@mui/icons-material/Share';
 import AlertConfirm from 'react-alert-confirm';
-import SignInAndSignUp from "../../Component/SignInAndSignUp";
 import FileUpdate from "./ChildWindow/FileUpdate";
 
 /**
@@ -22,7 +20,7 @@ export default class FileList extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            token:'7c8fc5d4d75bf8312d352c1eca738b16',
+            token:this.props.token,
             file:null,
             fileName:'',
             fileList:'',

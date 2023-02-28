@@ -5,6 +5,10 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import {Input} from "@mui/material";
 import axios from "axios";
+import CreateIcon from '@mui/icons-material/Create';
+import AlertConfirm from "react-alert-confirm";
+import FileUpdate from "../CloudBox/ChildWindow/FileUpdate";
+import NicknameUpdate from "./ChildWindow/NicknameUpdate";
 
 
 export default class Me extends React.Component{
@@ -21,29 +25,36 @@ export default class Me extends React.Component{
             token:props.token,
             password:'',
             newpassword_1:'',
-            newpassword_2:''
+            newpassword_2:'',
+            newNickname:''
         }
 
         this.handleChangePassword = this.handleChangePassword.bind(this);
         this.handleChangeNewPassword_1 = this.handleChangeNewPassword_1.bind(this);
         this.handleChangeNewPassword_2 = this.handleChangeNewPassword_2.bind(this);
+        this.handleUpdatePassword = this.handleUpdatePassword.bind(this);
+        this.handleChangeLogout = this.handleChangeLogout.bind(this);
+        this.handleChangeDelete = this.handleChangeDelete.bind(this);
+        this.handleChangeNickname = this.handleChangeNickname.bind(this);
     }
 
-
-
-    handleChangePassowrd(event) {
+    handleChangePassword(event) {
         this.setState({password: event.target.value});
     }
 
-    handleChangeNewPassowrd_1(event) {
+    handleChangeNewPassword_1(event) {
         this.setState({newpassword_1: event.target.value});
     }
 
-    handleChangeNewPassowrd_2(event) {
+    handleChangeNewPassword_2(event) {
         this.setState({newpassword_2: event.target.value});
     }
 
-    handleUpdatePassword(event) {
+
+    /**
+     * 密码更新触发器
+     */
+    handleUpdatePassword() {
         const { password,newpassword_1,newpassword_2,token } = this.state;
         if(newpassword_1 === newpassword_2){
             //如果密码一致
@@ -53,7 +64,50 @@ export default class Me extends React.Component{
         }else {
             alert("两次输入密码不一致，请重新输入");
         }
-        event.preventDefault();
+    }
+
+    /**
+     * 账户登出触发器
+     */
+    handleChangeLogout(){
+
+        axios.post("http://localhost:8081/logoutAccount?token=" + this.state.token).then((response) => {
+
+            if(response.data.res === "success"){
+                alert("登出成功");
+            }else {
+                alert("登出失败");
+            }
+            window.location.assign(
+                '/MainPage'
+            );
+        });
+
+
+    }
+
+    /**
+     * 用户昵称修改弹框触发器
+     * @param params
+     * @returns {Promise<void>}
+     */
+    handleChangeNickname = async (params) => {
+
+        const [action] = await AlertConfirm({
+            maskClosable: true,
+            custom: dispatch => (
+                <div>
+                    <NicknameUpdate token = {this.state.token} />
+                </div>
+            )
+        });
+    }
+
+
+
+
+    handleChangeDelete(){
+
     }
 
 
@@ -62,7 +116,7 @@ export default class Me extends React.Component{
         return(
 
             <Grid container>
-                <Grid sx={12} md={12} style={{
+                <Grid xs={12} md={12} style={{
                     display:"flex",
                     justifyContent: "center",
                     alignItems: "center"
@@ -76,7 +130,7 @@ export default class Me extends React.Component{
                         alignItems: "center"
                     }}>
                         <Grid container >
-                            <Grid sx={12} md={12} style={{
+                            <Grid xs={12} md={12} style={{
                                 display:"flex",
                                 justifyContent: "center",
                                 alignItems: "center"
@@ -86,7 +140,7 @@ export default class Me extends React.Component{
                                     height:'80px'
                                 }}>H</Avatar>
                             </Grid>
-                            <Grid sx={12} md={12} style={{
+                            <Grid xs={12} md={12} style={{
                                 display:"flex",
                                 justifyContent: "center",
                                 alignItems: "center"
@@ -94,10 +148,14 @@ export default class Me extends React.Component{
                                 <div style={{
                                     fontSize:'25px'
                                 }}>
-                                    {this.state.nickname}
+                                    {this.state.nickname + " "}
+                                        <CreateIcon onClick={this.handleChangeNickname} sx={{
+                                            width:'20px',
+                                            height:'20px',
+                                        }}/>
                                 </div>
                             </Grid>
-                            <Grid sx={12} md={12} style={{
+                            <Grid xs={12} md={12} style={{
                                 display:"flex",
                                 justifyContent: "center",
                                 alignItems: "center"
@@ -111,7 +169,7 @@ export default class Me extends React.Component{
                         </Grid>
                     </Paper>
                 </Grid>
-                <Grid sx={12} md={12} style={{
+                <Grid xs={12} md={12} style={{
                     display:"flex",
                     justifyContent: "center",
                     alignItems: "center"
@@ -122,7 +180,7 @@ export default class Me extends React.Component{
                         alignItems: "center",
                         padding:'50px'
                     }}>
-                        <Grid sx={6} md={6}>
+                        <Grid xs={6} md={6}>
                             账户属性
                             <br/>
                             {this.state.authority}
@@ -133,19 +191,19 @@ export default class Me extends React.Component{
 
 
                         </Grid>
-                        <Grid sx={6} md={6}>
+                        <Grid xs={6} md={6}>
 
                             重置密码
                             <br/>
                             <Input type="password" placeholder="请输入原密码" value={this.state.password} onChange={this.handleChangePassword}/>
                             <Input type="password" placeholder="请输入新密码" value={this.state.newpassword_1} onChange={this.handleChangeNewPassword_1}/>
                             <Input type="password" placeholder="请再次输入新密码" value={this.state.newpassword_2} onChange={this.handleChangeNewPassword_2}/>
-                            <Button variant="contained">重置</Button>
+                            <Button variant="contained" onClick={this.handleUpdatePassword}>重置</Button>
 
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid sx={12} md={12} style={{
+                <Grid xs={12} md={12} style={{
                     display:"flex",
                     justifyContent: "center",
                     alignItems: "center",
@@ -153,18 +211,18 @@ export default class Me extends React.Component{
                 }}>
                     <Button variant="outlined" color="error" sx={{
                         width:'8vw',
-                        height:'8vh',
+                        height:'6vh',
                         borderRadius:'10px',
                         marginRight:'3vw',
                         fontSize:'20px'
-                    }}>退出</Button>
+                    }} onClick={this.handleChangeLogout}>退出</Button>
                     <Button variant="contained" color="error" sx={{
                         width:'8vw',
-                        height:'8vh',
+                        height:'6vh',
                         borderRadius:'10px',
                         marginLeft:'3vw',
                         fontSize:'20px'
-                    }}>注销</Button>
+                    }} onClick={this.handleChangeDelete}>注销</Button>
 
                 </Grid>
             </Grid>

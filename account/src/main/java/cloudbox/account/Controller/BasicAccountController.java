@@ -22,6 +22,7 @@ import java.util.Map;
  * @version 0.0.2
  */
 @RestController
+@CrossOrigin(value = "http://localhost:3000")
 public class BasicAccountController {
 
     @Autowired
@@ -103,7 +104,7 @@ public class BasicAccountController {
 
         if(account != null){
 
-            boolean judge = accountManagement.updateAccountDeleted(account.get("account_id"),(byte) 0);
+            boolean judge = accountManagement.updateAccountDeleted(account.get("accountId"),(byte) 0);
 
             if(judge){
                 result.put("res","success");
@@ -117,22 +118,26 @@ public class BasicAccountController {
 
     /**
      * 账户修改密码控制器
-     * @param token 账户当前token
-     * @param password 账户新密码
+     * @param box 数据包
      * @return 修改成功返回sucess；失败返回failure
      */
     @PostMapping(value = "updatePassword")
     @ResponseBody
     @CrossOrigin(value = "http://localhost:3000")
-    Object updatePassword(@RequestParam String token, @RequestParam String password){
+    Object updatePassword(@RequestBody Map<String,String> box){
+
+        String token = box.get("token");
+
+        String password = box.get("password");
 
         Map<String,String> result = new HashMap<>();
 
         Map<String,String> account = tokenRedisUtil.tokenCheck(token);
 
+
         if(account != null){
 
-            boolean judge = accountManagement.updateAccountPassword(account.get("account_id"),password);
+            boolean judge = accountManagement.updateAccountPassword(account.get("accountId"),password);
 
             if(judge){
                 result.put("res","success");
@@ -146,14 +151,16 @@ public class BasicAccountController {
 
     /**
      * 账户修改昵称控制器
-     * @param token 账户当前token
-     * @param nickname 账户新昵称
+     * @param box 数据包
      * @return 修改成功返回sucess；失败返回failure
      */
     @PostMapping(value = "updateNickname")
     @ResponseBody
     @CrossOrigin(value = "http://localhost:3000")
-    Object updateNickname(@RequestParam String token, @RequestParam String nickname){
+    Object updateNickname(@RequestBody Map<String,String> box){
+
+        String token = box.get("token");
+        String nickname =box.get("newNickname");
 
         Map<String,String> result = new HashMap<>();
 
@@ -161,7 +168,7 @@ public class BasicAccountController {
 
         if(account != null){
 
-            boolean judge = accountManagement.updateAccountNickname(account.get("account_id"),nickname);
+            boolean judge = accountManagement.updateAccountNickname(account.get("accountId"),nickname);
 
             if(judge){
                 result.put("res","success");
@@ -196,7 +203,7 @@ public class BasicAccountController {
 
             Blob imagBlob = new SerialBlob(image);
 
-            boolean judge = accountManagement.updateAccountPhoto(account.get("account_id"),imagBlob);
+            boolean judge = accountManagement.updateAccountPhoto(account.get("accountId"),imagBlob);
 
             if(judge){
                 result.put("res","success");
@@ -219,12 +226,17 @@ public class BasicAccountController {
         String passowrd = result.get("password");
 
         Map<String,String> temp =new HashMap<>();
-        temp.put("res","success");
-        temp.put("token",accountManagement.tempLogin(result.get("accountId"),result.get("password")));
 
-        System.out.println(accountManagement.tempLogin(result.get("accountId"),result.get("password")));
+        String token = accountManagement.tempLogin(result.get("accountId"),result.get("password"));
 
-
+        if(token == null){
+            temp.put("res","failure");
+            temp.put("token",null);
+        }else {
+            temp.put("res","success");
+            temp.put("token",token);
+            System.out.println(accountManagement.tempLogin(result.get("accountId"),result.get("password")));
+        }
 
         return temp;
 
