@@ -29,7 +29,6 @@ root.render(
         </Switch>
 
     </BrowserRouter>
-    // <FileUpdate />
 
     // <CustomPopup />
 

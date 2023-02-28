@@ -169,8 +169,8 @@ public class FileController {
      * @param response 下载响应
      * @throws IOException
      */
-    @PostMapping(value = "DownloadFile")
-    @CrossOrigin
+    @GetMapping(value = "downloadFile")
+    @CrossOrigin(origins = "http://localhost:3000")
     void DownloadFile(@RequestParam String token, @RequestParam String fileName, HttpServletResponse response) throws IOException {
 
         Map<String,String> account = tokenRedisUtil.tokenCheck(token);
@@ -196,7 +196,7 @@ public class FileController {
      */
     @PostMapping(value = "readFileList")
     @ResponseBody
-    @CrossOrigin
+    @CrossOrigin(origins = "http://localhost:3000")
     Object readFileList(@RequestParam String token){
 
         Map<String,String> account = tokenRedisUtil.tokenCheck(token);
@@ -219,15 +219,17 @@ public class FileController {
 
     /**
      * 删除文件控制器
-     * @param token 账户令牌
-     * @param fileName 待删除文件名
+     * @param box 数据包
      * @return 若删除成功，返回res-success；若删除失败，返回res-failure
      * @throws IOException
      */
     @PostMapping(value = "deleteFile")
     @ResponseBody
-    @CrossOrigin
-    Object deleteFile(@RequestParam String token, @RequestParam String fileName) throws IOException {
+    @CrossOrigin(origins = "http://localhost:3000")
+    Object deleteFile(@RequestBody Map<String,String> box) throws IOException {
+
+        String token = box.get("token");
+        String fileName = box.get("fileName");
 
         Map<String,String> account = tokenRedisUtil.tokenCheck(token);
         //身份校验
@@ -240,7 +242,7 @@ public class FileController {
             boolean judge = fileManagement.deleteFCB(fileName,fileId);
             //删除FCB及文件
             if(judge){
-                result.put("res","sccuess");
+                result.put("res","success");
                 return result;
             }else {
                 result.put("res","failure");

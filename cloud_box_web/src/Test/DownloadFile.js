@@ -16,7 +16,7 @@ class DownloadFile extends React.Component {
     handleDownload = () => {
         const { fileName } = this.state;
         axios({
-            url: `http://localhost:8082/download/${fileName}`,
+            url: `http://localhost:8082/downloadFile/?token=`,
             method: 'GET',
             responseType: 'blob', // 指定响应类型为二进制流
         }).then((response) => {

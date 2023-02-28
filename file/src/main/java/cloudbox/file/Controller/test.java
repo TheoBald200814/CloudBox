@@ -68,15 +68,15 @@ public class test {
     @CrossOrigin(origins = "http://localhost:3000")
     public void downloadFile(@PathVariable String fileName, HttpServletResponse response) throws IOException {
 
-        System.out.println(fileName);
-
+//        System.out.println(fileName);
+//
 //        ftpClientUtil.downloadFileFromFTP(fileName,"/home/data/ftptest",response);
-
+//
 //        ftpClientUtil.downloadFile("controller_4@test.comtest","controller_4@test.com/","233",response);
-
+//
 //        fileManagement.downloadFile("test","controller_4@test.com",response);
 
-        fileManagement.deleteFCB("test","controller_4@test.com");
+//        fileManagement.deleteFCB("test","controller_4@test.com");
 
 
 

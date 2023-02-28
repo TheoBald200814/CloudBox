@@ -36,7 +36,6 @@ export default class FileList extends React.Component{
 
     componentDidMount() {
         this.updateFileList();
-
     }
 
     /**
@@ -97,8 +96,19 @@ export default class FileList extends React.Component{
      * @param id
      */
     handleFileDelete(id) {
-        // console.log(`Button clicked for row with id ${id}`);
-        alert(id + "Delete");
+
+        const {token} = this.state;
+
+        axios.post("http://localhost:8082/deleteFile", {token: token, fileName:id}).then((response) => {
+            //建立连接，删除文件
+            if(response.data.res === 'success'){
+                //若删除成功
+                alert("文件名删除成功");
+            }else {
+                //若删除失败
+                alert("文件名删除失败");
+            }
+        });
     }
 
     /**
@@ -106,39 +116,52 @@ export default class FileList extends React.Component{
      * @param id
      */
     handleFileChange(id) {
-
         this.setState({
             testPage:true
         })
     }
 
+    /**
+     * 文件更新触发器
+     * @param params
+     * @returns {Promise<void>}
+     */
     handleFileUpdate = async (params) => {
 
         const [action] = await AlertConfirm({
             maskClosable: true,
             custom: dispatch => (
-                // <div className="custom-popup">
-                //     <div>Custom popup</div>
-                //     <div style={{ marginTop: 10 }}>
-                //         <button onClick={() => dispatch(false)}>Close</button>
-                //     </div>
-                // </div>
                 <div>
                     <FileUpdate token = {this.state.token} fileName = {params} />
                 </div>
             )
         });
-
     }
 
     /**
      * 文件下载触发器
      * @param id
      */
-    handleButtonDownload(id) {
-        // console.log(`Button clicked for row with id ${id}`);
-        alert(id + "Download");
+    handleFileDownload(id) {
+
+        axios({
+            url: `http://localhost:8082/downloadFile/?token=` + this.state.token + '&fileName=' + id,
+            method: 'GET',
+            responseType: 'blob', // 指定响应类型为二进制流
+        }).then((response) => {
+            // 创建一个URL对象，用于生成下载链接
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            // 创建一个<a>标签，用于触发下载
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', id);
+            document.body.appendChild(link);
+            link.click();
+        });
+
+
     }
+
 
     render() {
         const columns = [
@@ -152,7 +175,7 @@ export default class FileList extends React.Component{
                 headerName: 'Change',
                 width: 80,
                 renderCell: (params) => (
-                    <Button variant="outlined" color="primary" sx = {{ borderRadius:'8px' }} onClick={() => this.handleFileUpdate(params.id)}>
+                    <Button variant="contained" color="primary" sx = {{ borderRadius:'8px' }} onClick={() => this.handleFileUpdate(params.id)}>
                         <CreateOutlinedIcon />
                     </Button>
                 ),
@@ -162,7 +185,7 @@ export default class FileList extends React.Component{
                 headerName: 'Download',
                 width: 80,
                 renderCell: (params) => (
-                    <Button variant="outlined" color="primary" sx = {{ borderRadius:'8px' }} onClick={() => this.handleFileDownload(params.id)}>
+                    <Button variant="contained" color="primary" sx = {{ borderRadius:'8px' }} onClick={() => this.handleFileDownload(params.id)}>
                         <CloudDownloadOutlinedIcon />
                     </Button>
                 ),
@@ -172,7 +195,7 @@ export default class FileList extends React.Component{
                 headerName: 'Share',
                 width: 80,
                 renderCell: (params) => (
-                    <Button variant="outlined" color="primary" sx = {{ borderRadius:'8px' }} onClick={() => this.handleFileShare(params.id)}>
+                    <Button variant="contained" color="primary" sx = {{ borderRadius:'8px' }} onClick={() => this.handleFileShare(params.id)}>
                         <ShareIcon />
                     </Button>
                 ),
