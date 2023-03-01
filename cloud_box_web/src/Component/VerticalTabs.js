@@ -110,6 +110,15 @@ export default function VerticalTabs(props) {
 
                         <ListItemButton sx={{
                             borderRadius: '20px'
+                        }} onClick={() => handleClickPage('0')}>
+                            <ListItemIcon>
+                                <SendIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="公告信息" />
+                        </ListItemButton>
+
+                        <ListItemButton sx={{
+                            borderRadius: '20px'
                         }} onClick={() => handleClickPage('1')}>
                             <ListItemIcon>
                                 <SendIcon />
@@ -119,7 +128,7 @@ export default function VerticalTabs(props) {
 
                         <ListItemButton sx={{
                             borderRadius: '20px'
-                        }} onClick={() => handleClickPage('1')}>
+                        }} onClick={() => handleClickPage('2')}>
                             <ListItemIcon>
                                 <SendIcon />
                             </ListItemIcon>
@@ -128,7 +137,7 @@ export default function VerticalTabs(props) {
 
                         <ListItemButton sx={{
                             borderRadius: '20px'
-                        }} onClick={() => handleClickPage('1')}>
+                        }} onClick={() => handleClickPage('3')}>
                             <ListItemIcon>
                                 <SendIcon />
                             </ListItemIcon>
@@ -137,7 +146,7 @@ export default function VerticalTabs(props) {
 
                         <ListItemButton sx={{
                             borderRadius: '20px'
-                        }} onClick={() => handleClickPage('2')}>
+                        }} onClick={() => handleClickPage('4')}>
                             <ListItemIcon>
                                 <DraftsIcon />
                             </ListItemIcon>
@@ -155,11 +164,11 @@ export default function VerticalTabs(props) {
                         </ListItemButton>
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <List component="div" disablePadding>
-                                <ListItemButton sx={{ pl: 4 }} onClick={() => handleClickPage('3')}>
+                                <ListItemButton sx={{ pl: 4 }} onClick={() => handleClickPage('5')}>
                                     <ListItemIcon>
                                         <StarBorder />
                                     </ListItemIcon>
-                                    <ListItemText primary="List" />
+                                    <ListItemText primary="文件列表" />
                                 </ListItemButton>
                             </List>
                         </Collapse>
@@ -231,30 +240,56 @@ class ChildPage extends React.Component{
 
     render() {
         switch (this.state.pageNum){
-            case '1':
+
+            case '0':
+                //公告信息
                 return (
                     <div>
 
+                       0
+
+                    </div>
+                );
+                break;
+            case '1':
+                //个人管理
+                return (
+                    <div>
                         <Me token={this.state.token}
                             accountId={this.state.userId}
                             nickname={this.state.nickname}
                             authority={this.state.authority}
                             empty_={this.state.empty}
                         />
-
                     </div>
                 );
                 break;
             case '2':
+                //账户管理
                 return (
                     <div>
-                        PAGE2
-                        {this.state.token}
+                        2
                     </div>
-
                 );
                 break;
             case '3':
+                //数据分析
+                return (
+                    <div>
+                        3
+                    </div>
+                );
+                break;
+            case '4':
+                //文件共享
+                return (
+                    <div>
+                        4
+                    </div>
+                );
+                break;
+            case '5':
+                //云盘空间-文件列表
                 return (
                     <div>
                         <FileList token = {this.state.token} />

@@ -65,8 +65,8 @@ export default class SignInAndSignUp extends React.Component {
                             '?userId='+ userId +
                             '&token=' + response.data.token +
                             '&nickname=' + response.data.nickname +
-                            '&authoriy=' + response.data.authoriy +
-                            '&empty=' + response.data.empty_
+                            '&authority=' + response.data.authority +
+                            '&empty=' + response.data.empty
                         );
                         alert('登陆成功');
                         //跳转Home，携带所需参数

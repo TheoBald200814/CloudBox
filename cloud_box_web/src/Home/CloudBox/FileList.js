@@ -160,6 +160,21 @@ export default class FileList extends React.Component{
 
     }
 
+    /**
+     * 文件共享触发器
+     */
+    handleFileShare = async (params) => {
+
+        const [action] = await AlertConfirm({
+            maskClosable: true,
+            custom: dispatch => (
+                <div>
+                    <FileUpdate token = {this.state.token} fileName = {params} />
+                </div>
+            )
+        });
+    }
+
 
     render() {
         const columns = [

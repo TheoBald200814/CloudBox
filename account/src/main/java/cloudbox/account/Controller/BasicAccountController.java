@@ -221,27 +221,10 @@ public class BasicAccountController {
     @CrossOrigin(value = "http://localhost:3000")
     Object tempLogin(@RequestBody Map<String,String> result) throws IOException, SQLException {
 
-        System.out.println(result);
         String accountId = result.get("accountId");
         String passowrd = result.get("password");
 
-        Map<String,String> temp =new HashMap<>();
-
-        String token = accountManagement.tempLogin(result.get("accountId"),result.get("password"));
-
-        if(token == null){
-            temp.put("res","failure");
-            temp.put("token",null);
-        }else {
-            temp.put("res","success");
-            temp.put("token",token);
-            System.out.println(accountManagement.tempLogin(result.get("accountId"),result.get("password")));
-        }
-
-        return temp;
-
-//        return accountManagement.createAccount(accountId,passowrd,"nick",null);
-
+        return  accountManagement.tempLogin(accountId,passowrd);
     }
 
 }

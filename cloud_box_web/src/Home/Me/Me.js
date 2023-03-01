@@ -9,6 +9,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import AlertConfirm from "react-alert-confirm";
 import FileUpdate from "../CloudBox/ChildWindow/FileUpdate";
 import NicknameUpdate from "./ChildWindow/NicknameUpdate";
+import AccountDelete from "./ChildWindow/AccountDelete";
 
 
 export default class Me extends React.Component{
@@ -59,7 +60,12 @@ export default class Me extends React.Component{
         if(newpassword_1 === newpassword_2){
             //如果密码一致
             axios.post("http://localhost:8081/updatePassword", {token:token, password:newpassword_1}).then((response) => {
-                console.log(response.data);
+                if(response.data.res === 'success'){
+                    alert("修改成功，请重新登陆")
+                    this.handleChangeLogout();
+                }else {
+                    alert("密码修改失败")
+                }
             });
         }else {
             alert("两次输入密码不一致，请重新输入");
@@ -72,7 +78,6 @@ export default class Me extends React.Component{
     handleChangeLogout(){
 
         axios.post("http://localhost:8081/logoutAccount?token=" + this.state.token).then((response) => {
-
             if(response.data.res === "success"){
                 alert("登出成功");
             }else {
@@ -82,8 +87,6 @@ export default class Me extends React.Component{
                 '/MainPage'
             );
         });
-
-
     }
 
     /**
@@ -103,11 +106,19 @@ export default class Me extends React.Component{
         });
     }
 
+    /**
+     * 账户注销触发器
+     */
+    handleChangeDelete = async (params) => {
 
-
-
-    handleChangeDelete(){
-
+        const [action] = await AlertConfirm({
+            maskClosable: true,
+            custom: dispatch => (
+                <div>
+                    <AccountDelete token = {this.state.token} />
+                </div>
+            )
+        });
     }
 
 
@@ -148,11 +159,14 @@ export default class Me extends React.Component{
                                 <div style={{
                                     fontSize:'25px'
                                 }}>
-                                    {this.state.nickname + " "}
-                                        <CreateIcon onClick={this.handleChangeNickname} sx={{
+                                    <div onClick={this.handleChangeNickname}>
+                                        {this.state.nickname + " "}
+                                        <CreateIcon sx={{
                                             width:'20px',
                                             height:'20px',
                                         }}/>
+                                    </div>
+
                                 </div>
                             </Grid>
                             <Grid xs={12} md={12} style={{
