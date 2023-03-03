@@ -44,7 +44,6 @@ public class BasicAccountController {
      */
     @PostMapping(value = "createAccount")
     @ResponseBody
-    @CrossOrigin(value = "http://localhost:3000")
     Object createAccount(@RequestBody Map<String,String> box) throws IOException, SQLException {
 
         Map<String,String> result = new HashMap<>();
@@ -75,7 +74,6 @@ public class BasicAccountController {
      */
     @PostMapping(value = "logoutAccount")
     @ResponseBody
-    @CrossOrigin(value = "http://localhost:3000")
     Object logoutAccount(@RequestParam String token){
 
         Map<String,String> result = new HashMap<>();
@@ -95,7 +93,6 @@ public class BasicAccountController {
      */
     @PostMapping(value = "deleteAccount")
     @ResponseBody
-    @CrossOrigin(value = "http://localhost:3000")
     Object deleteAccount(@RequestParam String token){
 
         Map<String,String> result = new HashMap<>();
@@ -123,7 +120,6 @@ public class BasicAccountController {
      */
     @PostMapping(value = "updatePassword")
     @ResponseBody
-    @CrossOrigin(value = "http://localhost:3000")
     Object updatePassword(@RequestBody Map<String,String> box){
 
         String token = box.get("token");
@@ -156,7 +152,6 @@ public class BasicAccountController {
      */
     @PostMapping(value = "updateNickname")
     @ResponseBody
-    @CrossOrigin(value = "http://localhost:3000")
     Object updateNickname(@RequestBody Map<String,String> box){
 
         String token = box.get("token");
@@ -190,7 +185,6 @@ public class BasicAccountController {
      */
     @PostMapping(value = "updatePhoto")
     @ResponseBody
-    @CrossOrigin(value = "http://localhost:3000")
     Object updatePhoto(@RequestParam String token, @RequestParam MultipartFile photo) throws IOException, SQLException {
 
         Map<String,String> result = new HashMap<>();
@@ -215,16 +209,21 @@ public class BasicAccountController {
     }
 
 
-
+    /**
+     * 临时身份认证控制器
+     * @param result 数据包
+     * @return 登陆数据包
+     * @throws IOException
+     * @throws SQLException
+     */
     @PostMapping(value = "tempLogin")
     @ResponseBody
-    @CrossOrigin(value = "http://localhost:3000")
     Object tempLogin(@RequestBody Map<String,String> result) throws IOException, SQLException {
 
         String accountId = result.get("accountId");
-        String passowrd = result.get("password");
+        String password = result.get("password");
 
-        return  accountManagement.tempLogin(accountId,passowrd);
+        return  accountManagement.tempLogin(accountId,password);
     }
 
 }

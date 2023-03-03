@@ -15,15 +15,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 文件管理控制类
+ * @author TheoBald
+ * @version 0.0.1
+ */
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class FileController {
 
     @Autowired
     private FileManagement fileManagement;
-
+    //文件管理服务
     @Autowired
     private TokenRedisUtil tokenRedisUtil;
-
+    //身份认证服务
 
     /**
      * 新建文件控制器
@@ -35,7 +41,6 @@ public class FileController {
      */
     @PostMapping(value = "createFile")
     @ResponseBody
-    @CrossOrigin(origins = "http://localhost:3000")
     Object createFile(@RequestParam String token, @RequestParam String fileName, @RequestParam MultipartFile file) throws IOException {
 
         Map<String,String> account = tokenRedisUtil.tokenCheck(token);
@@ -80,7 +85,6 @@ public class FileController {
      */
     @PostMapping(value = "updateFileName")
     @ResponseBody
-    @CrossOrigin(origins = "http://localhost:3000")
     Object updateFileName(@RequestBody Map<String,String> box){
 
         String token = box.get("token");
@@ -125,7 +129,6 @@ public class FileController {
      */
     @PostMapping(value = "updateFileType")
     @ResponseBody
-    @CrossOrigin(origins = "http://localhost:3000")
     Object updateFileType(@RequestBody Map<String,String> box){
 
         String token = box.get("token");
@@ -170,7 +173,6 @@ public class FileController {
      * @throws IOException
      */
     @GetMapping(value = "downloadFile")
-    @CrossOrigin(origins = "http://localhost:3000")
     void DownloadFile(@RequestParam String token, @RequestParam String fileName, HttpServletResponse response) throws IOException {
 
         Map<String,String> account = tokenRedisUtil.tokenCheck(token);
@@ -196,7 +198,6 @@ public class FileController {
      */
     @PostMapping(value = "readFileList")
     @ResponseBody
-    @CrossOrigin(origins = "http://localhost:3000")
     Object readFileList(@RequestParam String token){
 
         Map<String,String> account = tokenRedisUtil.tokenCheck(token);
@@ -225,7 +226,6 @@ public class FileController {
      */
     @PostMapping(value = "deleteFile")
     @ResponseBody
-    @CrossOrigin(origins = "http://localhost:3000")
     Object deleteFile(@RequestBody Map<String,String> box) throws IOException {
 
         String token = box.get("token");

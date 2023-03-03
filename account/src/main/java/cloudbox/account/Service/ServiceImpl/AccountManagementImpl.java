@@ -598,7 +598,7 @@ public class AccountManagementImpl implements AccountManagement {
             accountRedisUtil.set(account);
             //刷新Redis缓存
             System.out.println(accountId + ":登陆成功");
-            String token = encryptPasswordByDM5(passwordByMD5);
+            String token = encryptPasswordByDM5(password);
             //生成token
             tokenRedisUtil.tempPutToken(token,accountId,"0");
             //token插入缓存（token-账户ID-权限位）
