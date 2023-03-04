@@ -1,0 +1,101 @@
+
+前后端数据交互协议————公告区
+
+数据汇总
+
+    noticeId:Id（10-30位Email格式字符串）
+    noticeTitle:title(1-30位字符串)
+    noticeData:data(0-255位字符串)
+    noticeDate:date(日期格式)
+    deleted:有效位（默认true）
+    noticeModify:modify(10-30位Email格式字符串)
+
+=======================================================
+基础用户(*为非空,#为数据)
+-------------------------------------------------------
+    查看全体公告
+        Request:
+            http://ip:8083/readNoticeAll
+            data:
+            [
+                /
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*noticeId":"##",
+                    "*noticeTitle":"##",
+                    "*noticeData":"##",
+                    "*noticeDate":"##",
+                    "*noticeDeleted":"##",
+                    "*noticeModify":"##"
+                },
+                {
+                    ...
+                }
+            ]
+=======================================================
+管理员账户(*为非空,#为数据)
+（注：管理员账户为基础用户的升级账户，故上述接口对于管理员账户均适用，以下不再赘述）
+-------------------------------------------------------
+    新建公告
+        Request:
+            http://ip:8083/createNotice
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*noticeTitle":"##",
+                    "*noticeData":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+-------------------------------------------------------
+    修改公告内容（自己发布/其他管理员发布）
+        Request:
+            http://ip:8083/updateNoticeData
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*noticeTitle":"##",
+                    "*noticeData":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+-------------------------------------------------------
+    修改公告有效位（自己发布/其他管理员发布）
+        Request:
+            http://ip:8083/updateNoticeDeleted
+            data:
+            [
+                {
+                    "*token":"##",
+                    "*noticeTitle":"##",
+                    "*noticeDeleted":"##"
+                }
+            ]
+        Response:
+            data:
+            [
+                {
+                    "*res":"success/failure"
+                }
+            ]
+-------------------------------------------------------
+
+
+
