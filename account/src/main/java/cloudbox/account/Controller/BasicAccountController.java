@@ -226,4 +226,24 @@ public class BasicAccountController {
         return  accountManagement.tempLogin(accountId,password);
     }
 
+
+    /**
+     * 账户查看密码控制器 （此接口仅供业务模块远程调用，调用时，权限检查待完善）
+     * @param accountId 账户Id
+     * @return 账户密码
+     * @throws SQLException
+     * @throws IOException
+     */
+    @PostMapping (value = "readAccountPassword")
+    @ResponseBody
+    Object readAccountPasswordAndAuthority(@RequestBody String accountId) throws SQLException, IOException {
+        String passwordByMD5 = accountManagement.readAccountPassword(accountId);
+        String authority = String.valueOf(accountManagement.readAccountAuthority(accountId));
+        Map<String,String> result = new HashMap<>();
+        result.put("passwordByMD5",passwordByMD5);
+        result.put("authority",authority);
+        return result;
+
+    }
+
 }

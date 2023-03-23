@@ -3,8 +3,8 @@ server:
 
 eureka:
   instance:
-    hostname: 43.142.148.141
-    instance-id: 43.142.148.141:${spring.application.name}:${server.port}
+    hostname: localhost
+    instance-id: localhost:${spring.application.name}:${server.port}
   client:
     service-url:
       defaultZone: http://43.142.148.141:8761/eureka/
