@@ -1,26 +1,32 @@
 server:
   port: 8082
-
+eureka:
+  instance:
+    hostname: 43.142.148.141
+    instance-id: 43.142.148.141:${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://43.142.148.141:8761/eureka/
 spring:
-  # 文件上传
+  application:
+    name: cloud-box-file-management
   servlet:
     multipart:
       # 单个文件大小
       max-file-size: 10GB
       # 设置总上传的文件大小
       max-request-size: 20GB
-
   datasource:
     name: cloud_box  #数据库名
     url: jdbc:mysql://rm-bp12o076k95u118i2oo.mysql.rds.aliyuncs.com:3306/cloud_box #url
     username: cloud_box_file #用户名
     password: Cloud_box_file #密码
     driver-class-name: com.mysql.cj.jdbc.Driver  #数据库链接驱动
-
   redis:
     enabled: true
     database_file: 3
     database_token: 2
+    database_account: 1
     host: 43.142.148.141
     port: 6379
     password: 123456
@@ -34,8 +40,6 @@ spring:
     lettuce.pool.max-idle: 5
     #连接池中的最小空闲连接
     lettuce.pool.min-idle: 0
-
-
 mybatis-plus:
   mapper-locations: classpath:mapper/*.java # 扫描注解映射类
   type-aliases-package: cloudbox.file.Bean # 扫描实体类
