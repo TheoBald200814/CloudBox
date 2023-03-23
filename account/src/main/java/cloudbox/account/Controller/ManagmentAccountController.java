@@ -43,7 +43,6 @@ public class ManagmentAccountController {
      */
     @PostMapping(value = "selectBasicList")
     @ResponseBody
-    @CrossOrigin(value = "http://localhost:3000")
     Object selectBasicList(@RequestParam String token){
 
         Map<String,String> result = new HashMap<>();

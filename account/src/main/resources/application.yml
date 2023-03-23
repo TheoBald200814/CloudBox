@@ -1,15 +1,23 @@
 server:
   port: 8081
 
-spring:
+eureka:
+  instance:
+    hostname: 43.142.148.141
+    instance-id: 43.142.148.141:${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://43.142.148.141:8761/eureka/
 
+spring:
+  application:
+    name: cloud-box-account-management
   datasource:
     name: cloud_box  #数据库名
     url: jdbc:mysql://rm-bp12o076k95u118i2oo.mysql.rds.aliyuncs.com:3306/cloud_box #url
     username: cloud_box_account #用户名
     password: Cloud_box_account #密码
     driver-class-name: com.mysql.cj.jdbc.Driver  #数据库链接驱动
-
   redis:
     enabled: true
     database_account: 1
@@ -27,7 +35,6 @@ spring:
     lettuce.pool.max-idle: 5
     #连接池中的最小空闲连接
     lettuce.pool.min-idle: 0
-
 
 mybatis-plus:
   mapper-locations: classpath:mapper/*.java # 扫描注解映射类
