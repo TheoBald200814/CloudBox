@@ -1,0 +1,14 @@
+server:
+  port: 8761
+eureka:
+  instance:
+    hostname: cloud-box-eureka-server-center
+    instance-id: 43.142.148.141:${eureka.instance.hostname}:${server.port}
+
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://43.142.148.141:8761/eureka/
+
+
