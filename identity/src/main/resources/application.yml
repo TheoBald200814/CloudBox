@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: cloud-box-identity
+  redis:
+    database: 2
+    host: 43.142.148.141
+    port: 6379
+    password: 123456
+    #连接超时时间（毫秒）
+    timeout: 1800000
+    #连接池最大连接数（使用负值表示没有限制）
+    lettuce.pool.max-active: 20
+    #最大阻塞等待时间(负数表示没限制)
+    lettuce.pool.max-wait: -1
+    #连接池中的最大空闲连接
+    lettuce.pool.max-idle: 5
+    #连接池中的最小空闲连接
+    lettuce.pool.min-idle: 0
+eureka:
+  instance:
+    hostname: localhost
+    instance-id: localhost:${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://43.142.148.141:8761/eureka/
+server:
+  port: 8085
+
+
+
