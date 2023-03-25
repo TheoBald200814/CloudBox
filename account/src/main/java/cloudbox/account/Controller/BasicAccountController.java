@@ -208,42 +208,34 @@ public class BasicAccountController {
         return result;
     }
 
+//    /**
+//     * 临时身份认证控制器
+//     * @param result 数据包
+//     * @return 登陆数据包
+//     * @throws IOException
+//     * @throws SQLException
+//     */
+//    @PostMapping(value = "tempLogin")
+//    @ResponseBody
+//    Object tempLogin(@RequestBody Map<String,String> result) throws IOException, SQLException {
+//
+//        String accountId = result.get("accountId");
+//        String password = result.get("password");
+//
+//        return  accountManagement.tempLogin(accountId,password);
+//    }
 
     /**
-     * 临时身份认证控制器
-     * @param result 数据包
-     * @return 登陆数据包
-     * @throws IOException
-     * @throws SQLException
-     */
-    @PostMapping(value = "tempLogin")
-    @ResponseBody
-    Object tempLogin(@RequestBody Map<String,String> result) throws IOException, SQLException {
-
-        String accountId = result.get("accountId");
-        String password = result.get("password");
-
-        return  accountManagement.tempLogin(accountId,password);
-    }
-
-
-    /**
-     * 账户查看密码控制器 （此接口仅供业务模块远程调用，调用时，权限检查待完善）
+     * 账户查看控制器 （此接口仅供业务模块远程调用，调用时，调用方身份检查待完善）
      * @param accountId 账户Id
-     * @return 账户密码
+     * @return 账户对象
      * @throws SQLException
      * @throws IOException
      */
-    @PostMapping (value = "readAccountPassword")
+    @PostMapping (value = "readAccount")
     @ResponseBody
-    Object readAccountPasswordAndAuthority(@RequestBody String accountId) throws SQLException, IOException {
-        String passwordByMD5 = accountManagement.readAccountPassword(accountId);
-        String authority = String.valueOf(accountManagement.readAccountAuthority(accountId));
-        Map<String,String> result = new HashMap<>();
-        result.put("passwordByMD5",passwordByMD5);
-        result.put("authority",authority);
-        return result;
-
+    Object readAccount(@RequestBody String accountId) throws SQLException, IOException {
+        return accountManagement.readAccount(accountId);
     }
 
 }

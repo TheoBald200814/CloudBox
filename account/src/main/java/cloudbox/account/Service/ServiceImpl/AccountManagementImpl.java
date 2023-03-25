@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.util.DigestUtils;
 import javax.validation.constraints.*;
 import java.io.IOException;
+import java.security.PublicKey;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -339,7 +340,7 @@ public class AccountManagementImpl implements AccountManagement {
      * @param accountId 账户Id
      * @return 若账户存在，则返回该账户；若账户不存在，则返回空
      */
-    private Account readAccount(String accountId) throws IOException, SQLException {
+    public Account readAccount(@NotBlank @Size(min=10,max=30) @Email String accountId) throws SQLException, IOException {
 
         Account account = accountRedisUtil.get(accountId);
 
@@ -569,51 +570,51 @@ public class AccountManagementImpl implements AccountManagement {
         return DigestUtils.md5DigestAsHex(data.getBytes());
     }
 
-    /**
-     * 账户登陆（测试用）
-     * @param accountId 账户Id
-     * @param password 账户密码
-     * @return 若登陆成功，返回账户token；若登陆失败，返回null
-     */
-    @Override
-    public Object tempLogin(@NotBlank @Size(min=10,max=30) @Email String accountId,
-                     @NotBlank @Size(min=10,max=32) String password) throws IOException, SQLException {
-
-        Map<String,String> result = new HashMap<>();
-        //结果集初始化
-        String passwordByMD5 = encryptPasswordByDM5(password);
-        //密码加密
-        Account account = accountRedisUtil.get(accountId);
-        //Redis缓存查询ACB
-        if(account == null){
-            //若Redis未命中
-            account = accountMapper.selectById(accountId);
-            //MySQL查询ACB
-            System.out.println("Redis缓存未命中，MySQL命中");
-        }else {
-            System.out.println("Redis缓存命中");
-        }
-        if(account != null && account.getPassword().equals(passwordByMD5)){
-            //若Redis或MySQL命中，且密码正确
-            accountRedisUtil.set(account);
-            //刷新Redis缓存
-            System.out.println(accountId + ":登陆成功");
-            String token = encryptPasswordByDM5(password);
-            //生成token
-            tokenRedisUtil.tempPutToken(token,accountId,"0");
-            //token插入缓存（token-账户ID-权限位）
-            result.put("res","success");
-            result.put("token",token);
-            result.put("nickname",account.getNickname());
-            result.put("authority",Byte.toString(account.getAuthority()));
-            result.put("empty",Integer.toString(account.getAccountEmpty()));
-            return result;
-        }else {
-            System.out.println(accountId + ":登陆失败");
-            result.put("res","failure");
-            return result;
-        }
-    }
+//    /**
+//     * 账户登陆（测试用）
+//     * @param accountId 账户Id
+//     * @param password 账户密码
+//     * @return 若登陆成功，返回账户token；若登陆失败，返回null
+//     */
+//    @Override
+//    public Object tempLogin(@NotBlank @Size(min=10,max=30) @Email String accountId,
+//                     @NotBlank @Size(min=10,max=32) String password) throws IOException, SQLException {
+//
+//        Map<String,String> result = new HashMap<>();
+//        //结果集初始化
+//        String passwordByMD5 = encryptPasswordByDM5(password);
+//        //密码加密
+//        Account account = accountRedisUtil.get(accountId);
+//        //Redis缓存查询ACB
+//        if(account == null){
+//            //若Redis未命中
+//            account = accountMapper.selectById(accountId);
+//            //MySQL查询ACB
+//            System.out.println("Redis缓存未命中，MySQL命中");
+//        }else {
+//            System.out.println("Redis缓存命中");
+//        }
+//        if(account != null && account.getPassword().equals(passwordByMD5)){
+//            //若Redis或MySQL命中，且密码正确
+//            accountRedisUtil.set(account);
+//            //刷新Redis缓存
+//            System.out.println(accountId + ":登陆成功");
+//            String token = encryptPasswordByDM5(password);
+//            //生成token
+//            tokenRedisUtil.tempPutToken(token,accountId,"0");
+//            //token插入缓存（token-账户ID-权限位）
+//            result.put("res","success");
+//            result.put("token",token);
+//            result.put("nickname",account.getNickname());
+//            result.put("authority",Byte.toString(account.getAuthority()));
+//            result.put("empty",Integer.toString(account.getAccountEmpty()));
+//            return result;
+//        }else {
+//            System.out.println(accountId + ":登陆失败");
+//            result.put("res","failure");
+//            return result;
+//        }
+//    }
 
 
 

@@ -157,15 +157,22 @@ public interface AccountManagement {
     boolean updateAccountEmpty(@NotBlank @Size(min=10,max=30) @Email String accountId,
                                @NotNull @Min(0) @Max(1000000) int newAccountEmpty);
 
-
     /**
-     * 账户登陆（测试用）
+     * 账户数据查看
      * @param accountId 账户Id
-     * @param password 账户密码
-     * @return 若登陆成功，返回账户token；若登陆失败，返回null
+     * @return 账户对象
      */
-    Object tempLogin(@NotBlank @Size(min=10,max=30) @Email String accountId,
-                     @NotBlank @Size(min=10,max=32) String password) throws IOException, SQLException;
+    Account readAccount(@NotBlank @Size(min=10,max=30) @Email String accountId) throws SQLException, IOException;
+
+
+//    /**
+//     * 账户登陆（测试用）
+//     * @param accountId 账户Id
+//     * @param password 账户密码
+//     * @return 若登陆成功，返回账户token；若登陆失败，返回null
+//     */
+//    Object tempLogin(@NotBlank @Size(min=10,max=30) @Email String accountId,
+//                     @NotBlank @Size(min=10,max=32) String password) throws IOException, SQLException;
 }
 
 

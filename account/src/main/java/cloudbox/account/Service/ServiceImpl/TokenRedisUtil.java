@@ -64,7 +64,6 @@ public class TokenRedisUtil {
 
     }
 
-
     public void tempPutToken(@Size(max = 32,min = 32) String token, String accountId,String authority){
 
         Map<String,String> result = new HashMap<>();
