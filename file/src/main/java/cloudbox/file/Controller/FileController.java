@@ -2,12 +2,15 @@ package cloudbox.file.Controller;
 
 
 import cloudbox.file.Bean.File;
+import cloudbox.file.Bean.FileShareInfo;
 import cloudbox.file.Service.FileManagement;
 import cloudbox.file.ServiceImpl.TokenRedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -31,8 +34,11 @@ public class FileController {
     private TokenRedisUtil tokenRedisUtil;
     //身份认证服务
 
+    @Resource(name = "TokenRedisTemplate")
+    RedisTemplate<String, Object> redisTemplate;
+
     /**
-     * 新建文件控制器
+     * 新建文件（上传）控制器
      * @param token 账户令牌
      * @param fileName 文件名
      * @param file 文件数据
@@ -253,6 +259,29 @@ public class FileController {
             result.put("res","failure");
             return result;
         }
+    }
+
+    /**
+     * 共享文件链接生成控制器
+     * @param fileShareInfo 共享文件元数据
+     * @return 共享链接
+     */
+    @PostMapping("generateShareFileLink")
+    @ResponseBody
+    Object generateShareFileLink(@RequestBody FileShareInfo fileShareInfo) {
+        String link = fileManagement.generateFileShareLink1(fileShareInfo);
+        return link;
+    }
+
+    /**
+     * 共享文件下载控制器
+     * @param link 共享链接
+     * @param response 下载响应
+     * @throws IOException
+     */
+    @GetMapping(value = "downloadShareFile")
+    void DownloadShareFile(@RequestParam String link, HttpServletResponse response) throws IOException {
+        fileManagement.fileShareSericeDownload(link, response);
     }
 
 }

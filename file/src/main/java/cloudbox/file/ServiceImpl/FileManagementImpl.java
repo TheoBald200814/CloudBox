@@ -1,6 +1,7 @@
 package cloudbox.file.ServiceImpl;
 
 import cloudbox.file.Bean.File;
+import cloudbox.file.Bean.FileShareInfo;
 import cloudbox.file.Service.FileManagement;
 import cloudbox.file.mapper.Mapper;
 
@@ -8,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +20,9 @@ import javax.validation.constraints.Size;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -38,6 +42,9 @@ public class FileManagementImpl implements FileManagement {
 
     @Autowired
     private FtpClientUtil ftpClientUtil;
+
+    @Autowired
+    private ShareRedisUtil shareRedisUtil;
 
 
     /**
@@ -595,5 +602,57 @@ public class FileManagementImpl implements FileManagement {
         }else {
             return false;
         }
+    }
+
+    /**
+     * 共享连接获取文件服务-下载
+     *
+     * @param link     链接
+     * @param response 文件下载
+     */
+    @Override
+    public void fileShareSericeDownload(String link, HttpServletResponse response) throws IOException {
+        FileShareInfo fileShareInfo = shareRedisUtil.checkLink(link);
+        String fileName = fileShareInfo.getFileName();
+        String fileId = fileShareInfo.getFileID();
+        downloadFile(fileName,fileId,response);
+        //文件下载
+        int count = readFileDownloadCount(fileName,fileId);
+        //获取原始下载次数
+        updateFileDownloadCount(fileName,fileId,++count);
+        //更新下载次数
+
+    }
+
+    /**
+     * 生成自己文件共享链接
+     *
+     * @param fileShareInfo    dto
+     * @return 共享链接
+     */
+    @Override
+    public String generateFileShareLink1(FileShareInfo fileShareInfo) {
+        String fileId = fileShareInfo.getFileID();
+        //获取账户ID（同时也是文件ID）
+        fileShareInfo.setFileID(fileId);
+        String param = fileShareInfo.getFileID() + fileShareInfo.getFileName() + "sdahwu2h8hhhP)(83u2n/.j" + System.currentTimeMillis();
+        String link = DigestUtils.md5DigestAsHex(param.getBytes());
+        //生成链接字符串
+        fileShareInfo.setLink(link);
+        shareRedisUtil.setLink(fileShareInfo);
+        //文件共享链接录入Redis缓存
+        return link;
+    }
+
+    /**
+     * 共享连接获取文件服务-上传
+     *
+     * @param token 账户令牌
+     * @param link  链接
+     * @param file  待上传文件
+     */
+    @Override
+    public void fileShareServiceUpdate(String token, String link, MultipartFile file) {
+
     }
 }

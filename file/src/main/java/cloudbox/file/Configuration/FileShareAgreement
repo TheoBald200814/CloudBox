@@ -1,0 +1,28 @@
+文件共享策略：
+    1.自己文件生成文件共享连接（1.可下载 2.可替换）
+        String generateFileShareLink1(String token, String fileName);
+        String generateFileShareLink2(String token, String fileName);
+
+    2.通过别人的共享连接获取文件服务（1.文件下载 2.文件替换）
+        void fileShareSericeDownload(String token, String link, HttpServletResponse response);
+        void fileShareServiceUpdate(String token, String link, MultipartFile file);
+
+共享链接存在生命周期，暂定为2种类型：
+    1.次数受限类型：文件下载/替换指定次数后失效（最长时限为1个月）
+    2.时间受限类型：1分钟/1天/1个月
+    （其中，次数受限类型按文件下载/替换分别计数，而时间受限类型统一计时）
+
+
+上述共享链接机制，需要Redis缓存进行映射介入，映射结构如下：
+    文件共享链接:(共享链接，文件ID，文件名，文件url，生命周期位，周期1，周期2，周期3)
+
+    当生命周期位为1时，代表该链接采用次数受限型计算，周期1为下载剩余次数，周期2为替换剩余次数；
+                2时代表采用时间受限型计算，周期1为失效时间数值，周期2为时间单位;
+    周期3用来标记该链接是否为可替换链接。1为是，0为否。
+
+
+
+
+
+
+

@@ -2,6 +2,7 @@ package cloudbox.file.Service;
 
 
 import cloudbox.file.Bean.File;
+import cloudbox.file.Bean.FileShareInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -210,5 +211,26 @@ public interface FileManagement {
     boolean deleteFCB(@NotBlank @Size(max = 20, min = 1) String fileName,
                       @NotBlank @Size(max = 30, min = 10) String fileId) throws IOException;
 
+    /**
+     * 共享连接获取文件服务-下载
+     * @param link 链接
+     * @param response 文件下载
+     */
+    void fileShareSericeDownload(String link, HttpServletResponse response) throws IOException;
+
+    /**
+     * 生成自己文件共享连接-下载
+     * @param fileShareInfo dto
+     * @return 共享链接
+     */
+    String generateFileShareLink1(FileShareInfo fileShareInfo);
+
+    /**
+     * 共享连接获取文件服务-上传
+     * @param token 账户令牌
+     * @param link 链接
+     * @param file 待上传文件
+     */
+    void fileShareServiceUpdate(String token, String link, MultipartFile file);
 
 }
