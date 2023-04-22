@@ -2,7 +2,7 @@ spring:
   application:
     name: cloud-box-identity
   redis:
-    database: 2
+    database_token: 2
     host: 43.142.148.141
     port: 6379
     password: 123456
@@ -18,8 +18,8 @@ spring:
     lettuce.pool.min-idle: 0
 eureka:
   instance:
-    hostname: localhost
-    instance-id: localhost:${spring.application.name}:${server.port}
+    hostname: 43.142.148.141
+    instance-id: 43.142.148.141:${spring.application.name}:${server.port}
   client:
     service-url:
       defaultZone: http://43.142.148.141:8761/eureka/
