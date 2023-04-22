@@ -22,7 +22,7 @@ export default class AccountDelete extends React.Component{
 
         const {token} = this.state;
         //建立请求
-        axios.post("http://localhost:8081/deleteAccount?token=" + token).then((response) => {
+        axios.post("http://43.142.148.141:8081/deleteAccount?token=" + token).then((response) => {
             //建立连接，注销账户
             if(response.data.res === 'success'){
                 //注销成功

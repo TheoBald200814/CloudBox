@@ -19,6 +19,7 @@ import Paper from "@mui/material/Paper";
 import {Route, Switch, useLocation, useParams} from "react-router-dom";
 import FileList from "../Home/CloudBox/FileList";
 import Me from "../Home/Me/Me";
+import BasicUserManagement from "../Home/BasicUserManagement/BasicUserManagement";
 
 
 function a11yProps(index) {
@@ -110,7 +111,7 @@ export default function VerticalTabs(props) {
 
                         <ListItemButton sx={{
                             borderRadius: '20px'
-                        }} onClick={() => handleClickPage('0')}>
+                        }} onClick={() => handleClickPage('0')} >
                             <ListItemIcon>
                                 <SendIcon />
                             </ListItemIcon>
@@ -128,16 +129,20 @@ export default function VerticalTabs(props) {
 
                         <ListItemButton sx={{
                             borderRadius: '20px'
-                        }} onClick={() => handleClickPage('2')}>
+                        }} onClick={() => handleClickPage('2')} disabled= {
+                            authority === '0'
+                        }>
                             <ListItemIcon>
                                 <SendIcon />
                             </ListItemIcon>
-                            <ListItemText primary="账户管理" />
+                            <ListItemText primary="系统管理" />
                         </ListItemButton>
 
                         <ListItemButton sx={{
                             borderRadius: '20px'
-                        }} onClick={() => handleClickPage('3')}>
+                        }} onClick={() => handleClickPage('3')} disabled= {
+                            authority === '0'
+                        }>
                             <ListItemIcon>
                                 <SendIcon />
                             </ListItemIcon>
@@ -265,10 +270,10 @@ class ChildPage extends React.Component{
                 );
                 break;
             case '2':
-                //账户管理
+                //系统管理
                 return (
                     <div>
-                        2
+                        <BasicUserManagement token = {this.state.token} />
                     </div>
                 );
                 break;

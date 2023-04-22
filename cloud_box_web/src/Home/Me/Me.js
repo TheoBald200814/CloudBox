@@ -59,7 +59,7 @@ export default class Me extends React.Component{
         const { password,newpassword_1,newpassword_2,token } = this.state;
         if(newpassword_1 === newpassword_2){
             //如果密码一致
-            axios.post("http://localhost:8081/updatePassword", {token:token, password:newpassword_1}).then((response) => {
+            axios.post("http://43.142.148.141:8081/updatePassword", {token:token, password:newpassword_1}).then((response) => {
                 if(response.data.res === 'success'){
                     alert("修改成功，请重新登陆")
                     this.handleChangeLogout();
@@ -77,7 +77,7 @@ export default class Me extends React.Component{
      */
     handleChangeLogout(){
 
-        axios.post("http://localhost:8081/logoutAccount?token=" + this.state.token).then((response) => {
+        axios.post("http://43.142.148.141:8081/logoutAccount?token=" + this.state.token).then((response) => {
             if(response.data.res === "success"){
                 alert("登出成功");
             }else {

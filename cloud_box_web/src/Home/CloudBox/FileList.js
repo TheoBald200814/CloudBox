@@ -57,7 +57,7 @@ export default class FileList extends React.Component{
         const formData = new FormData();
         if(this.state.file != null){
             formData.append("file", this.state.file);
-            axios.post("http://localhost:8082/createFile?token=" + token + "&fileName=" + fileName, formData).then((response) => {
+            axios.post("http://43.142.148.141:8082/createFile?token=" + token + "&fileName=" + fileName, formData).then((response) => {
                 console.log(response.data);
                 if(response.data.res === 'success'){
                     alert("文件上传成功");
@@ -78,7 +78,7 @@ export default class FileList extends React.Component{
     updateFileList(){
 
         const {token} = this.state;
-        axios.post("http://localhost:8082/readFileList?token=" + token ).then((response) => {
+        axios.post("http://43.142.148.141:8082/readFileList?token=" + token ).then((response) => {
             console.log(response.data);
             if(response.data.res === 'failure'){
                 alert("文件列表检索失败");
@@ -97,14 +97,15 @@ export default class FileList extends React.Component{
 
         const {token} = this.state;
 
-        axios.post("http://localhost:8082/deleteFile", {token: token, fileName:id}).then((response) => {
+        axios.post("http://43.142.148.141:8082/deleteFile", {token: token, fileName:id}).then((response) => {
             //建立连接，删除文件
             if(response.data.res === 'success'){
                 //若删除成功
-                alert("文件名删除成功");
+                alert("文件删除成功");
+                this.updateFileList();
             }else {
                 //若删除失败
-                alert("文件名删除失败");
+                alert("文件删除失败");
             }
         });
     }
@@ -134,6 +135,7 @@ export default class FileList extends React.Component{
                 </div>
             )
         });
+        this.updateFileList();
     }
 
     /**
@@ -143,7 +145,7 @@ export default class FileList extends React.Component{
     handleFileDownload(id) {
 
         axios({
-            url: `http://localhost:8082/downloadFile/?token=` + this.state.token + '&fileName=' + id,
+            url: `http://43.142.148.141:8082/downloadFile/?token=` + this.state.token + '&fileName=' + id,
             method: 'GET',
             responseType: 'blob', // 指定响应类型为二进制流
         }).then((response) => {
@@ -223,7 +225,6 @@ export default class FileList extends React.Component{
                     </Button>
                 ),
             }
-
 
         ];
         const getRowId = (row) => row.fileName;

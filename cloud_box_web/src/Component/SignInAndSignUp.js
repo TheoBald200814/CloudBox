@@ -56,7 +56,7 @@ export default class SignInAndSignUp extends React.Component {
                 alert("请输入密码");
             }else {
                 //若输入均符合要求
-                axios.post("http://localhost:8081/tempLogin", {accountId: userId,password:password_1}).then((response) => {
+                axios.post("http://43.142.148.141:8085/login", {accountId: userId,password:password_1}).then((response) => {
                     //建立连接，核验身份
                     if(response.data.res === "success"){
                         //若身份认证成功
@@ -98,7 +98,7 @@ export default class SignInAndSignUp extends React.Component {
             }else {
                 if(password_1 === password_2){
                     //若输入均符合要求
-                    axios.post("http://localhost:8081/createAccount", {accountId: userId,password:password_1}).then((response) => {
+                    axios.post("http://43.142.148.141:8081/createAccount", {accountId: userId,password:password_1}).then((response) => {
                         //建立连接，注册账户
                         if(response.data.res === 'success'){
                             //若注册成功

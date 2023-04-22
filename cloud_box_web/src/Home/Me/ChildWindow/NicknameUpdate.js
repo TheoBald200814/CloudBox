@@ -37,7 +37,7 @@ export default class NicknameUpdate extends React.Component{
 
         if(newNickname !== ''){
             //建立请求
-            axios.post("http://localhost:8081/updateNickname", {token: token, newNickname:newNickname}).then((response) => {
+            axios.post("http://43.142.148.141:8081/updateNickname", {token: token, newNickname:newNickname}).then((response) => {
                 //建立连接，更新昵称
                 if(response.data.res === 'success'){
                     //若修改成功
@@ -57,7 +57,7 @@ export default class NicknameUpdate extends React.Component{
             <Box  sx={{
                 marginTop:'0.5%',
                 width:'30vw',
-                height: '50vh',
+                height: '10vh',
                 backgroundColor: "rgba(133,133,133,0.56)",
                 borderRadius: '20px',
             }}>

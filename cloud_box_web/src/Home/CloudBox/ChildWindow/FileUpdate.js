@@ -53,7 +53,7 @@ export default class FileUpdate extends React.Component{
         //若需要更新文件名
         if(newFileName !== ''){
             //建立请求
-            axios.post("http://localhost:8082/updateFileName", {token: token, fileName:fileName, newFileName:newFileName}).then((response) => {
+            axios.post("http://43.142.148.141:8082/updateFileName", {token: token, fileName:fileName, newFileName:newFileName}).then((response) => {
                 //建立连接，更新文件名
                 if(response.data.res === 'success'){
                     //若修改成功
@@ -67,7 +67,7 @@ export default class FileUpdate extends React.Component{
         //若需要更新文件类型
         if(this.state.newFileType !== ''){
             //建立请求
-            axios.post("http://localhost:8082/updateFileType", {token: this.state.token, fileName:this.state.fileName, newFileType:this.state.newFileType}).then((response) => {
+            axios.post("http://43.142.148.141:8082/updateFileType", {token: this.state.token, fileName:this.state.fileName, newFileType:this.state.newFileType}).then((response) => {
                 //建立连接，更新文件类型
                 if(response.data.res === 'success'){
                     //若修改成功

@@ -15,6 +15,7 @@ import {Button} from "@mui/material";
 import CustomPopup from "./Test/Toast";
 import FileUpdate from "./Home/CloudBox/ChildWindow/FileUpdate";
 import Me from "./Home/Me/Me";
+import BasicUserManagement from "./Home/BasicUserManagement/BasicUserManagement";
 
 
 
@@ -30,8 +31,6 @@ root.render(
         </Switch>
 
     </BrowserRouter>
-
-    // <CustomPopup />
 
 
 );
